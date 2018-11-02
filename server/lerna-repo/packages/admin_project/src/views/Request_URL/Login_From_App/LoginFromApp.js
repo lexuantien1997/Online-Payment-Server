@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Badge, Card, CardBody, CardHeader, Col, Pagination, PaginationItem, PaginationLink, Row, Table } from 'reactstrap';
 
-class Tables extends Component {
+class UserToUser extends Component {
   render() {
     return (
       <div className="animated fadeIn">
@@ -12,7 +12,7 @@ class Tables extends Component {
                 <i className="fa fa-align-justify"></i> Simple Table
               </CardHeader>
               <CardBody>
-                <Table hover responsive className="table-outline mb-0 d-none d-sm-table">
+                <Table responsive>
                   <thead>
                   <tr>
                     <th>Username</th>
@@ -390,4 +390,4 @@ class Tables extends Component {
   }
 }
 
-export default Tables;
+export default UserToUser;

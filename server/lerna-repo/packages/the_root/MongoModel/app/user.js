@@ -27,6 +27,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     require: true
   },
+  money:  {
+    type: Number,
+    default: false
+  },
+  status:  {
+    type: Number,
+    default: 1
+  },
 },{collection: 'user'});
 
 const User =  mongoose.model('user',UserSchema);

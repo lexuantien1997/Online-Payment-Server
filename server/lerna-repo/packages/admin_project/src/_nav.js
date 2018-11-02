@@ -1,33 +1,6 @@
 export default {
   items: [
-    {
-      name: 'Dashboard',
-      url: '/dashboard',
-      icon: 'icon-speedometer',
-      badge: {
-        variant: 'info',
-        text: 'NEW',
-      },
-    },
-    {
-      title: true,
-      name: 'Theme',
-      wrapper: {            // optional wrapper object
-        element: '',        // required valid HTML5 element tag
-        attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-      },
-      class: ''             // optional class names space delimited list for title item ex: "text-center"
-    },
-    {
-      name: 'Colors',
-      url: '/theme/colors',
-      icon: 'icon-drop',
-    },
-    {
-      name: 'Typography',
-      url: '/theme/typography',
-      icon: 'icon-pencil',
-    },
+    
     {
       title: true,
       name: 'Management Request URL',
@@ -57,26 +30,76 @@ export default {
       name: 'Login and Logout',
       url: '/loginandlogout',
       icon: 'icon-puzzle',
-      // children: [
-      //   {
-      //     name: 'User To User',
-      //     url: '/base/breadcrumbs',
-      //     icon: 'icon-puzzle',
-      //   },
-      //   {
-      //     name: 'User To Agent',
-      //     url: '/base/cards',
-      //     icon: 'icon-puzzle',
-      //   },
-      // ],
     },
     {
       title: true,
-      name: 'Components',
+      name: 'Management User Mobile',
       wrapper: {
         element: '',
         attributes: {},
       },
+    },
+    {
+      name: 'User Mobile',
+      url: '/usermobile',
+      icon: 'icon-puzzle',
+      children: [
+        {
+          name: 'Information',
+          url: '/usermobile/information',
+          icon: 'icon-puzzle',
+        },
+        {
+          name: 'History Transaction',
+          url: '/usermobile/histrorytransaction',
+          icon: 'icon-puzzle',
+        },
+      ],
+    },
+    {
+      name: 'User Agent',
+      url: '/useragent',
+      icon: 'icon-puzzle',
+      children: [
+        {
+          name: 'Information',
+          url: '/useragent/information',
+          icon: 'icon-puzzle',
+        },
+        {
+          name: 'History Transaction',
+          url: '/useragent/histrorytransaction',
+          icon: 'icon-puzzle',
+        },
+      ],
+    },
+    {
+      name: 'Dashboard',
+      url: '/dashboard',
+      icon: 'icon-speedometer',
+      badge: {
+        variant: 'info',
+        text: 'NEW',
+      },
+    },
+    {
+      title: true,
+      name: 'Theme',
+      wrapper: {            // optional wrapper object
+        element: '',        // required valid HTML5 element tag
+        attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+      },
+      class: ''             // optional class names space delimited list for title item ex: "text-center"
+    },
+    {
+      name: 'Colors',
+      url: '/theme/colors',
+      icon: 'icon-drop',
+    },
+    {
+      name: 'Typography',
+      url: '/theme/typography',
+      icon: 'icon-pencil',
     },
     {
       name: 'Base',

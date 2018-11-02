@@ -1,7 +1,6 @@
 const axios= require('axios');
-var store = require('../store');
 const loadUser = () => dispatch => {
-    axios.get('/transaction/usertouser/listUserToUser')
+    axios.get('/manage/usertouser/listUserToUser')
       .then(function (response) {
         // handle success
         let tempList = [];

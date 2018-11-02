@@ -1,38 +1,18 @@
 import React, { Component } from 'react';
-import { Badge, Card, CardBody, CardHeader, Col, Pagination, PaginationItem, PaginationLink, Row, Table } from 'reactstrap';
+import {  Card, CardBody, CardHeader, Col, Pagination, PaginationItem, PaginationLink, Row, Table } from 'reactstrap';
 import { connect } from 'react-redux'
-import { Provider } from 'react-redux'
 import { loadUser } from '../../../redux/actions/usertouser'
 
 var store = require('../../../redux/store')
 const axios = require('axios');
 class UserToUser extends Component {
   componentDidMount() {
-    // axios.get('/transaction/usertouser/listUserToUser')
-    //   .then(function (response) {
-    //     // handle success
-    //     let details = [];
-    //     // var empObj = JSON.parse(response.data);
-    //     console.log(response.data[0].Name);
-    //     // console.log(empObj);
-    //     // var {dispatch}=this.props;
-    //     store.dispatch({ type: 'LOAD_LIST_USERTOUSER', item: response.data });
-    //     console.log(store.getState());
-    //   })
-    //   .catch(function (error) {
-    //     // handle error
-    //     console.log(error);
-    //   })
-    //   .then(function () {
-    //     // always executed
-    //   });
     this.props.loadUser();
 
   }
   render() {
     const list = this.props.usertouser.listUsertoUser;
     const options =[];
-    // console.log(list);
     list.forEach(element => {
       for(let i = 0 ;i<element.length;i++){
         options.push(<tr>

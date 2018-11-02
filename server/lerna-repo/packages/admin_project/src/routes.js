@@ -187,14 +187,20 @@ const UserToUser = Loadable({
   loading: Loading,
 });
 
+const UserInfo = Loadable({
+  loader: () => import('./views/Management_User_App/User_Info/userinfo'),
+  loading: Loading,
+});
+
+
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/transaction', exact: true, name: 'Transaction', component: Colors },
   { path: '/transaction/usertouser', name: 'User To User', component: UserToUser },
   { path: '/transaction/usertoagent', name: 'User To Agent', component: Typography },
-
-
+  
+  { path: '/usermobile/information', exact: true, name: 'User Information', component: UserInfo },
+  { path: '/usermobile/histrorytransaction', exact: true, name: 'User Information', component: UserInfo },
   { path: '/', exact: true, name: 'Home', component: DefaultLayout },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/theme', exact: true, name: 'Theme', component: Colors },
