@@ -1,0 +1,46 @@
+{
+  "name": "online_payment_server",
+  "version": "1.0.0",
+  "description": "server handle Online Payment",
+  "main": "server.js",
+  "scripts": {
+    "download-node-server": "npm install",
+    "download-admin-project": "cd ./admin_modules/project && npm install",    
+    "download": "npm run download-node-server && npm run download-admin-project",
+
+    "dev": "node server.js && cd ./admin_modules/project && npm start",
+    
+    "build": "npm run download && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lexuantien1997/Online_Payment_Server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lexuantien1997/Online_Payment_Server/issues"
+  },
+  "homepage": "https://github.com/lexuantien1997/Online_Payment_Server#readme",
+  "dependencies": {
+    "authy": "^1.4.0",
+    "authy-client": "^1.1.1",
+    "axios": "^0.18.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "concurrently": "^4.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^6.1.0",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.3.0",
+    "jwt-decode": "^2.2.0",
+    "mongoose": "^5.3.11",
+    "nexmo": "^2.4.0",
+    "nodemailer": "^4.6.8",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "promise-retry": "^1.1.1",
+    "validator": "^10.9.0"
+  }
+}
