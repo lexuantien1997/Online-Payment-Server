@@ -19,7 +19,7 @@ dotenv.config();
 
  // Database config
 mongoose
-.connect(process.env.MONGO_OFFLINE || process.env.MONGO_ONLINE ,  { useNewUrlParser: true })
+.connect(/*process.env.MONGO_OFFLINE ||*/ process.env.MONGO_ONLINE ,  { useNewUrlParser: true })
 .then( () => console.log('MongoDB connected successfully') )
 .catch( err => console.log(err) );
 

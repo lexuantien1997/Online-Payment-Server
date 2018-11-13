@@ -5,12 +5,10 @@
   "main": "server.js",
   "scripts": {
     "download-node-server": "npm install",
-    "download-admin-project": "cd ./admin_modules/project && npm install",    
+    "download-admin-project": "cd ./admin_modules/project && npm install",
     "download": "npm run download-node-server && npm run download-admin-project",
-
-    "dev": "node server.js && cd ./admin_modules/project && npm start",
-    
-    "build": "npm run download && npm run dev"
+    "dev": "concurrently \"nodemon server.js \" \" cd ./admin_modules/project && npm start\"",
+    "build": " npm run download && npm run dev"
   },
   "repository": {
     "type": "git",
