@@ -29,7 +29,27 @@ const UserSchema = new mongoose.Schema({
   },
   money:  {
     type: Number,
-    default: false
+    default: 0
+  },
+  gender: {
+    type: Boolean,
+    default: true,
+    require: false
+  },
+  address: {
+    type: String,
+    default: "Viet Nam",
+    require: false
+  },
+  birthday: {
+    type: String,
+    require: false,
+    default: "25/10/1997"
+  },
+  memberAt: {
+    type: String,
+    require: false,
+    default: "01/01/2018"
   },
   status:  {
     type: Number,

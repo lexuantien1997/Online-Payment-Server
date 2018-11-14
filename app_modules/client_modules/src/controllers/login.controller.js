@@ -27,7 +27,18 @@ function login(user,password,res) {
     if(user.verified) { // Just login when user is verified phone
       if(passwordCrypt.comparePassowrd(password,user.password)) {
         api.status = 0;
-        api.user = user;    
+        let { name, phone, money, gender, memberAt, address, email, birthday } = user;
+        api.user = {
+          id: user._id,
+          name,
+          phone,
+          money,
+          gender,
+          memberAt,
+          address,
+          email,
+          birthday,
+        };    
         api.errors = {};
         console.log("Tracking: " + user._id + " _ " + user.phone + " login successfully");
         return res.status(200).json(api);   
