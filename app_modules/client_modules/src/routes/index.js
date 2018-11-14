@@ -24,5 +24,9 @@ router.post('/forgot-password', (req,res) => {
   forgotPassController(req,res);
 });
 
+router.get('/123', (req,res) => {
+  res.json({msg:"success"});
+});
+
 // Config express route in ver 4.x
 module.exports = router;
