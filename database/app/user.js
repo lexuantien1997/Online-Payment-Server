@@ -55,6 +55,16 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     default: 1
   },
+  securityPass: {
+    type: String,
+    default: "",
+    require: false
+  },
+  isFirstTime: {
+    type: Boolean,
+    default: true,
+    require: false
+  }
 },{collection: 'user'});
 
 const User =  mongoose.model('user',UserSchema);

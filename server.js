@@ -51,4 +51,4 @@ app.use(bodyParser.json());
 // route splitting
 routes(app);
 
-app.listen(8081, ()=> console.log('Server running on port: ' + 8081 ));
+app.listen(5000, ()=> console.log('Server running on port: ' + 5000 ));
