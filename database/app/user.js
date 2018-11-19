@@ -51,10 +51,25 @@ const UserSchema = new mongoose.Schema({
     require: false,
     default: "01/01/2018"
   },
+  isFirstTime: {
+    type: Boolean,
+    require: false,
+    default: true
+  },
   status:  {
     type: Number,
     default: 1
   },
+  securityPass: {
+    type: String,
+    default: "",
+    require: false
+  },
+  isFirstTime: {
+    type: Boolean,
+    default: true,
+    require: false
+  }
 },{collection: 'user'});
 
 const User =  mongoose.model('user',UserSchema);
