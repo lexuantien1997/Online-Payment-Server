@@ -187,6 +187,11 @@ const UserToUser = Loadable({
   loading: Loading,
 });
 
+const UserRecharge = Loadable({
+  loader: () => import('./views/Request_URL/User_Recharge'),
+  loading: Loading,
+});
+
 const UserInfo = Loadable({
   loader: () => import('./views/Management_User_App/User_Info/userinfo'),
   loading: Loading,
@@ -198,6 +203,7 @@ const UserInfo = Loadable({
 const routes = [
   { path: '/transaction/usertouser', name: 'User To User', component: UserToUser },
   { path: '/transaction/usertoagent', name: 'User To Agent', component: Typography },
+  { path: '/transaction/userrecharge', name: 'User Recharge', component: UserRecharge },
   
   { path: '/usermobile/information', exact: true, name: 'User Information', component: UserInfo },
   { path: '/usermobile/histrorytransaction', exact: true, name: 'User Information', component: UserInfo },

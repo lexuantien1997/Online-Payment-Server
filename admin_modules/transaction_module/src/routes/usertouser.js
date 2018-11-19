@@ -21,7 +21,7 @@ router.post("/", (req, res) => {
             Money: Money,
             Description: Description,
             DateTrans: new Date(),
-            Type: 3,
+            Type: 1,
             FeeTrans: 0,
             UrlFull: JSON.stringify(req.body)
         });
@@ -33,7 +33,6 @@ router.post("/", (req, res) => {
     }
     const result={
         status:0,
-        money:0,
         DateTrans: new Date(),
         TranID:tranID
     }

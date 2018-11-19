@@ -16,11 +16,14 @@ class UserToUser extends Component {
     list.forEach(element => {
       for(let i = 0 ;i<element.length;i++){
         options.push(<tr>
+          <td>{element[i].TranID}</td>
           <td>{element[i].Name}</td>
           <td>{element[i].Target}</td>
           <td>{element[i].Money}</td>
           <td>{element[i].Description}</td>
-          <td>{element[i].DateGet}</td>
+          <td>{element[i].DateTrans}</td>
+          <td>{element[i].Type}</td>
+          <td>{element[i].FeeTrans}</td>
           <td>{element[i].UrlFull}</td>
         </tr>)
       }
@@ -37,17 +40,19 @@ class UserToUser extends Component {
                 <Table responsive>
                   <thead>
                     <tr>
+                      <th>Trans ID</th>
                       <th>Name</th>
                       <th>Target</th>
                       <th>Money</th>
                       <th>Description</th>
-                      <th>DateGet</th>
+                      <th>DateTrans</th>
+                      <th>Type</th>
+                      <th>Fee Trans</th>
                       <th>URL_FULL</th>
                     </tr>
                   </thead>
                   <tbody>
                     {options}
-
                   </tbody>
                 </Table>
                 <Pagination>

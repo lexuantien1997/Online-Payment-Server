@@ -12,24 +12,29 @@ export default {
     {
       name: 'Transaction',
       url: '/transaction',
-      icon: 'icon-puzzle',
+      icon: 'icon-refresh',
       children: [
         {
           name: 'User To User',
           url: '/transaction/usertouser',
-          icon: 'icon-puzzle',
+          icon: 'icon-people',
         },
         {
           name: 'User To Agent',
           url: '/transaction/usertoagent',
-          icon: 'icon-puzzle',
+          icon: 'icon-people',
+        },
+        {
+          name: 'User Recharge',
+          url: '/transaction/userrecharge',
+          icon: 'icon-people',
         },
       ],
     },
     {
       name: 'Login and Logout',
       url: '/loginandlogout',
-      icon: 'icon-puzzle',
+      icon: 'icon-login',
     },
     {
       title: true,
@@ -42,34 +47,34 @@ export default {
     {
       name: 'User Mobile',
       url: '/usermobile',
-      icon: 'icon-puzzle',
+      icon: 'icon-user',
       children: [
         {
           name: 'Information',
           url: '/usermobile/information',
-          icon: 'icon-puzzle',
+          icon: 'icon-info',
         },
         {
           name: 'History Transaction',
           url: '/usermobile/histrorytransaction',
-          icon: 'icon-puzzle',
+          icon: 'icon-list',
         },
       ],
     },
     {
       name: 'User Agent',
       url: '/useragent',
-      icon: 'icon-puzzle',
+      icon: 'icon-user-follow',
       children: [
         {
           name: 'Information',
           url: '/useragent/information',
-          icon: 'icon-puzzle',
+          icon: 'icon-info',
         },
         {
           name: 'History Transaction',
           url: '/useragent/histrorytransaction',
-          icon: 'icon-puzzle',
+          icon: 'icon-list',
         },
       ],
     },
