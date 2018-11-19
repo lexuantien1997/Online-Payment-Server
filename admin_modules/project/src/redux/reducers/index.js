@@ -1,12 +1,12 @@
 // root of reducers
 
 import { combineReducers } from 'redux';
-import usertouserReducer from './usertouser.reducer'
 import userinfoReducer from './userinfo.reducer'
+import transactionReducer from './transaction.reducer'
 // combine all reducers from another module
 export default combineReducers({
-    usertouserReducer,
-    userinfoReducer
+    userinfoReducer,
+    transactionReducer
     // loginReducer,
     // errorsReducer    
 });

@@ -13,23 +13,6 @@ export default {
       name: 'Transaction',
       url: '/transaction',
       icon: 'icon-refresh',
-      children: [
-        {
-          name: 'User To User',
-          url: '/transaction/usertouser',
-          icon: 'icon-people',
-        },
-        {
-          name: 'User To Agent',
-          url: '/transaction/usertoagent',
-          icon: 'icon-people',
-        },
-        {
-          name: 'User Recharge',
-          url: '/transaction/userrecharge',
-          icon: 'icon-people',
-        },
-      ],
     },
     {
       name: 'Login and Logout',

@@ -182,13 +182,9 @@ const User = Loadable({
   loading: Loading,
 });
 
-const UserToUser = Loadable({
-  loader: () => import('./views/Request_URL/User_To_User'),
-  loading: Loading,
-});
 
-const UserRecharge = Loadable({
-  loader: () => import('./views/Request_URL/User_Recharge'),
+const Transaction = Loadable({
+  loader: () => import('./views/Request_URL/Transaction'),
   loading: Loading,
 });
 
@@ -201,9 +197,7 @@ const UserInfo = Loadable({
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/transaction/usertouser', name: 'User To User', component: UserToUser },
-  { path: '/transaction/usertoagent', name: 'User To Agent', component: Typography },
-  { path: '/transaction/userrecharge', name: 'User Recharge', component: UserRecharge },
+  { path: '/transaction/', name: 'User To User', component: Transaction },
   
   { path: '/usermobile/information', exact: true, name: 'User Information', component: UserInfo },
   { path: '/usermobile/histrorytransaction', exact: true, name: 'User Information', component: UserInfo },

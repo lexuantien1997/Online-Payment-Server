@@ -22,8 +22,7 @@ router.post("/", (req, res) => {
             Description: Description,
             DateTrans: new Date(),
             Type: 1,
-            FeeTrans: 0,
-            UrlFull: JSON.stringify(req.body)
+            FeeTrans: 0
         });
         newTransaction.save().then(item =>
             res.json(JSON.stringify(req.body))

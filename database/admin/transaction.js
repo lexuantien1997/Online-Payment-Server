@@ -8,9 +8,8 @@ const TransactionSchema = new mongoose.Schema({
         Description: String,
         DateTrans: String,
         Type: Number,
-        FeeTrans: Number,
-        UrlFull: String
-	}, { _id: false });
+        FeeTrans: Number
+	});
 	
 const Transaction =  mongoose.model('transaction',TransactionSchema);
 

@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import {  Card, CardBody, CardHeader, Col, Pagination, PaginationItem, PaginationLink, Row, Table } from 'reactstrap';
 import { connect } from 'react-redux'
-import { loadUser } from '../../../redux/actions/usertouser'
+import { loadTransaction } from '../../../redux/actions/transaction'
 
 var store = require('../../../redux/store')
 const axios = require('axios');
-class UserToUser extends Component {
+class Transaction extends Component {
   componentDidMount() {
-    this.props.loadUser();
+    this.props.loadTransaction();
 
   }
   render() {
-    const list = this.props.usertouser.listUsertoUser;
+    const list = this.props.recharge.listTransaction;
     const options =[];
     list.forEach(element => {
       for(let i = 0 ;i<element.length;i++){
+        console.log(element[i]);
         options.push(<tr>
           <td>{element[i].TranID}</td>
           <td>{element[i].Name}</td>
@@ -24,7 +25,6 @@ class UserToUser extends Component {
           <td>{element[i].DateTrans}</td>
           <td>{element[i].Type}</td>
           <td>{element[i].FeeTrans}</td>
-          <td>{element[i].UrlFull}</td>
         </tr>)
       }
     });
@@ -48,7 +48,6 @@ class UserToUser extends Component {
                       <th>DateTrans</th>
                       <th>Type</th>
                       <th>Fee Trans</th>
-                      <th>URL_FULL</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -85,8 +84,8 @@ class UserToUser extends Component {
 }
 
 const mapStateToProps = state => ({
-  usertouser: state.usertouserReducer,
+  recharge: state.transactionReducer,
 })
 // export default UserToUser;
-export default connect(mapStateToProps, { loadUser })(UserToUser);
+export default connect(mapStateToProps, { loadTransaction })(Transaction);
 
