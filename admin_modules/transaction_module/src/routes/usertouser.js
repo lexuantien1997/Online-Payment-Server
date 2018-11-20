@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const Transaction = require('../../../../database/admin/transaction');
 //const transaction = require('transaction_module');
 router.post("/", (req, res) => {
     let tranID = "TRANS0001";
