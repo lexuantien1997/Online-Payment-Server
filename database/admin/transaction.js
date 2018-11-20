@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const TransactionSchema = new mongoose.Schema({
         Name: String,
+        Phone: String,
         TranID: String,
         Target: String,
         Money: Number,

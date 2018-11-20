@@ -2,7 +2,7 @@ const loginValidate = require('../validations/login.validation');
 const loginService = require('../services/login.service');
 const errorNames = require('../validations/errors-name');
 const passwordCrypt = require('../utils/password.crypt');
-
+const Checkin = require('../../../../database/admin/checkin');
 const api = {
   status: 1, // 1: fail _ 2: success
   errors: {},
@@ -67,6 +67,25 @@ function login(user,password,res) {
 
 module.exports = (req,res) => {
   console.log(req.body);
+  var { emailOrPhone} = req.body;
+  if (emailOrPhone == undefined )
+      res.send("Something wrong:\n"
+          + ((emailOrPhone == undefined) ? "Email or Phone: undefined" : ("Email or Phone: " + Name)) + "\n"
+      );
+  else {
+      const newCheckin = new Checkin({
+          Name: emailOrPhone,
+          Phone:Phone,    
+          date: new Date(),
+          type:1
+
+      });
+      newCheckin.save().then(item =>
+          res.json(JSON.stringify(req.body))
+      ).catch(err => {
+          console.log(err);
+      });
+  }
   for(let key in req.body) req.body[key] = req.body[key].trim();   
   if(req.body.type == 'email') loginService.checkEmail(req.body.emailOrPhone).then (user => login(user,req.body.password,res));   
   else loginService.checkPhone(req.body.emailOrPhone).then (user => login(user,req.body.password,res));   

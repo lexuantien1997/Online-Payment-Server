@@ -193,12 +193,16 @@ const UserInfo = Loadable({
   loading: Loading,
 });
 
-
+const Checkin = Loadable({
+  loader: () => import('./views/Request_URL/Checkin'),
+  loading: Loading,
+});
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/transaction/', name: 'User To User', component: Transaction },
-  
+  { path: '/transaction', name: 'User To User', component: Transaction },
+  { path: '/checkin', name: 'Checkin', component: Checkin },
+
   { path: '/usermobile/information', exact: true, name: 'User Information', component: UserInfo },
   { path: '/usermobile/histrorytransaction', exact: true, name: 'User Information', component: UserInfo },
   { path: '/', exact: true, name: 'Home', component: DefaultLayout },

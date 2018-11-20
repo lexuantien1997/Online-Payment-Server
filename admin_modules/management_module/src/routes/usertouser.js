@@ -15,6 +15,7 @@ router.post("/", (req, res) => {
     else {
         const newTransaction = new Transaction({
             Name: Name,
+            Phone: Phone,
             Target: Target,
             Money: Money,
             Description: Description,

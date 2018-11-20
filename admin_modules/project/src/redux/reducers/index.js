@@ -3,10 +3,12 @@
 import { combineReducers } from 'redux';
 import userinfoReducer from './userinfo.reducer'
 import transactionReducer from './transaction.reducer'
+import checkinReducer from './checkin.reducer'
 // combine all reducers from another module
 export default combineReducers({
     userinfoReducer,
-    transactionReducer
+    transactionReducer,
+    checkinReducer
     // loginReducer,
     // errorsReducer    
 });

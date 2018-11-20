@@ -1,31 +1,26 @@
 import React, { Component } from 'react';
 import {  Card, CardBody, CardHeader, Col, Pagination, PaginationItem, PaginationLink, Row, Table } from 'reactstrap';
 import { connect } from 'react-redux'
-import { loadTransaction } from '../../../redux/actions/transaction'
+import { loadCheckin } from '../../../redux/actions/checkin'
 
 var store = require('../../../redux/store')
 const axios = require('axios');
-class Transaction extends Component {
+class Checkin extends Component {
   componentDidMount() {
-    this.props.loadTransaction();
+    this.props.loadCheckin();
 
   }
   render() {
-    const list = this.props.recharge.listTransaction;
+    const list = this.props.checkin.listCheckin;
     const options =[];
     list.forEach(element => {
       for(let i = 0 ;i<element.length;i++){
         console.log(element[i]);
         options.push(<tr>
-          <td>{element[i].TranID}</td>
-          <td>{element[i].Name}</td>
-          <td>{element[i].Phone}</td>
-          <td>{element[i].Target}</td>
-          <td>{element[i].Money}</td>
-          <td>{element[i].Description}</td>
-          <td>{element[i].DateTrans}</td>
-          <td>{element[i].Type}</td>
-          <td>{element[i].FeeTrans}</td>
+          <td>{element[i].phone}</td>
+          <td>{element[i].gmail}</td>
+          <td>{element[i].date}</td>
+          <td>{element[i].type}</td>
         </tr>)
       }
     });
@@ -41,15 +36,10 @@ class Transaction extends Component {
                 <Table responsive>
                   <thead>
                     <tr>
-                      <th>Trans ID</th>
-                      <th>Name</th>
                       <th>Phone</th>
-                      <th>Target</th>
-                      <th>Money</th>
-                      <th>Description</th>
-                      <th>DateTrans</th>
+                      <th>Gmail</th>
+                      <th>Data</th>
                       <th>Type</th>
-                      <th>Fee Trans</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -86,8 +76,8 @@ class Transaction extends Component {
 }
 
 const mapStateToProps = state => ({
-  recharge: state.transactionReducer,
+  checkin: state.checkinReducer,
 })
 // export default UserToUser;
-export default connect(mapStateToProps, { loadTransaction })(Transaction);
+export default connect(mapStateToProps, { loadCheckin })(Checkin);
 
