@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
 
 const CheckinSchema = new mongoose.Schema({
-	    phone: String,
-		gmail : String,
+		emailOrPhone: String,
 		date: String,
-		type: Number
+		type: String
 	});
 	
 const Checkin =  mongoose.model('checkin',CheckinSchema);

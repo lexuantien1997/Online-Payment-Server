@@ -17,8 +17,7 @@ class Checkin extends Component {
       for(let i = 0 ;i<element.length;i++){
         console.log(element[i]);
         options.push(<tr>
-          <td>{element[i].phone}</td>
-          <td>{element[i].gmail}</td>
+          <td>{element[i].emailOrPhone}</td>
           <td>{element[i].date}</td>
           <td>{element[i].type}</td>
         </tr>)
@@ -36,8 +35,7 @@ class Checkin extends Component {
                 <Table responsive>
                   <thead>
                     <tr>
-                      <th>Phone</th>
-                      <th>Gmail</th>
+                      <th>Email or Phone</th>
                       <th>Data</th>
                       <th>Type</th>
                     </tr>

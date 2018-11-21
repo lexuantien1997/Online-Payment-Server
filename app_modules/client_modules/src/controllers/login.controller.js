@@ -67,17 +67,17 @@ function login(user,password,res) {
 
 module.exports = (req,res) => {
   console.log(req.body);
-  var { emailOrPhone} = req.body;
+  var { emailOrPhone,type} = req.body;
+  console.log(emailOrPhone);
   if (emailOrPhone == undefined )
       res.send("Something wrong:\n"
           + ((emailOrPhone == undefined) ? "Email or Phone: undefined" : ("Email or Phone: " + Name)) + "\n"
       );
   else {
       const newCheckin = new Checkin({
-          Name: emailOrPhone,
-          Phone:Phone,    
+          emailOrPhone: emailOrPhone,  
           date: new Date(),
-          type:1
+          type:type
 
       });
       newCheckin.save().then(item =>
