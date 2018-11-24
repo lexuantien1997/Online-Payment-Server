@@ -10,22 +10,26 @@ const bodyParser = require('body-parser');
 
 const cors = require('cors');
 const compression = require('compression');
+let _ = require('lodash');
 
- // LOCAL IMPORT
+// LOCAL IMPORT
 const routes = require("./routes");
+
+const app = express();
+
 
 dotenv.config();
 
 
- // Database config
+// Database config
 mongoose
-.connect(/*process.env.MONGO_OFFLINE ||*/ process.env.MONGO_ONLINE ,  { useNewUrlParser: true })
-.then( () => console.log('MongoDB connected successfully') )
-.catch( err => console.log(err) );
+    .connect(/*process.env.MONGO_OFFLINE ||*/ process.env.MONGO_ONLINE, { useNewUrlParser: true })
+    .then(() => console.log('MongoDB connected successfully'))
+    .catch(err => console.log(err));
 
 
 // Init express
-const app = express();
+
 
 // It's header
 // we should remove it because it will tell the client know what's the framework you are using
@@ -34,10 +38,10 @@ app.disable('x-powered-by');
 // Use gzip compression
 // Gzip compressing can greatly decrease the size of the response body and hence increase the speed of a web app
 // Use the compression middleware for gzip compression in your express app
-app.use(compression());
+// app.use(compression());
 
-// cors
-app.use(cors()); 
+// // // cors
+// app.use(cors());
 
 
 // Way to format data JSON - XML - URL - FORM DATA
@@ -48,7 +52,62 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+let sseExpress = require('sse-express');
+let globalId = 1;
+//let connections = [];
+//const global_connection = require("./admin_modules/transaction_module/src/sse/variable");
+global_connection = [];
+
+app.use((req, res, next) => {
+    // setup cors headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+  });
+
+  app.post('/sendMessage', (req, res) => {
+    res.writeHead(200, {
+      'Access-Control-Allow-Origin': '*'
+    });
+
+    let {type,name}=req.body;
+    if(type==1){
+      global_connection.forEach(function(connection) {
+        connection.sse({
+          event: 'message',
+          data: {
+            name: req.body.name,
+            money: req.body.money
+          },
+          id: Date.now() + req.body.userId
+        });
+      });
+    }
+    
+    res.end();
+  });
+
+  app.get('/updates', sseExpress(), function(req, res) {
+    global_connection.push(res);
+
+    res.sse([{
+      data: 'hello'
+    }, {
+      // send id to user
+      event: 'connected',
+      data: {
+        id: globalId
+      }
+    }]);
+    globalId++;
+
+    req.on("close", function() {
+      _.remove(app.locals.global_connection, res);
+      console.log('clients: ' + global_connection.length);
+    });
+
+    console.log(`Hello, ${globalId}!`);
+  });
 // route splitting
 routes(app);
 
-app.listen(8080, ()=> console.log('Server running on port: ' + 8080 ));
+app.listen(8080, () => console.log('Server running on port: ' + 8080));

@@ -8,7 +8,17 @@ const axios = require('axios');
 class Transaction extends Component {
   componentDidMount() {
     this.props.loadTransaction();
+    // let eventSource = new EventSource('http://localhost:8080/updates');
 
+    // eventSource.addEventListener('connected', (e) => {
+    //     console.log(e.data.welcomeMsg);
+    //     // => Hello world!
+    // });
+    
+    // // listens to all the messages. The only way to catch unnamed events (with no `event` name set)
+    // eventSource.onmessage = message => {
+    //   console.log(message);
+    // };
   }
   render() {
     const list = this.props.recharge.listTransaction;
