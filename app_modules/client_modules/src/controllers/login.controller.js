@@ -70,7 +70,7 @@ module.exports = (req,res) => {
   var { emailOrPhone,type} = req.body;
   console.log(emailOrPhone);
   if (emailOrPhone == undefined )
-      res.send("Something wrong:\n"
+      return res.send("Something wrong:\n"
           + ((emailOrPhone == undefined) ? "Email or Phone: undefined" : ("Email or Phone: " + Name)) + "\n"
       );
   else {
@@ -81,7 +81,7 @@ module.exports = (req,res) => {
 
       });
       newCheckin.save().then(item =>
-          res.json(JSON.stringify(req.body))
+          { return res.json(JSON.stringify(req.body))}
       ).catch(err => {
           console.log(err);
       });

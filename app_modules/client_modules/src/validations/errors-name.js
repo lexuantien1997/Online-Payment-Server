@@ -34,6 +34,9 @@ const EMAIL_PHONE_EXIST = 'email phone existed';
 
 const EMAIL_PHONE_NOT_EXIST = 'email phone not exist';
 
+const UPDATE_INFOR_USER_ERROR = 'update information user error';
+const UPDATE_INFOR_USER_PHONE_NOT_EXIST = 'update information user error because phone not exist ';
+
 module.exports = {
     NAME_EMPTY,
 
@@ -67,6 +70,8 @@ module.exports = {
     PASSWORD_NOTCORRECT,
 
     EMAIL_PHONE_EXIST,
-    EMAIL_PHONE_NOT_EXIST
+    EMAIL_PHONE_NOT_EXIST,
     
+    UPDATE_INFOR_USER_ERROR,
+    UPDATE_INFOR_USER_PHONE_NOT_EXIST
 };

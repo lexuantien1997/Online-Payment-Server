@@ -4,6 +4,7 @@ const registerController = require('../controllers/register.controller');
 const registerPinController = require('../controllers/register.pin');
 const verifyRegisterController = require('../controllers/verify-register.controller');
 const forgotPassController = require('../controllers/forgot-password.controller');
+const updateInformationUser = require('../controllers/update-information-user.controller');
 const router = express.Router();
 
 router.post('/login', (req,res) => {  
@@ -28,6 +29,11 @@ router.post('/send-verify', (req,res) => {
 
 router.post('/forgot-password', (req,res) => {
   forgotPassController(req,res);
+});
+
+router.post('/update-information-user', (req,res) => {
+  console.log("Tracking: User " + req.body.email + " start update information user");
+  updateInformationUser(req,res);
 });
 
 router.get('/123', (req,res) => {
