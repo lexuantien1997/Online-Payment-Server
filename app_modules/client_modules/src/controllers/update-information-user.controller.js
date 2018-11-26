@@ -46,7 +46,7 @@ module.exports = (req,res) => {
 
             let { 
                 _id, name, phone, money, gender, memberAt,
-                 email, birthday, isFirstTime, address
+                 email, birthday, isFirstTime, address,avatar
             } = usercollection;
 
             api.user = {
@@ -59,7 +59,8 @@ module.exports = (req,res) => {
                 address: address,
                 email: email,
                 birthday: birthday,
-                isFirstTime: isFirstTime
+                isFirstTime: isFirstTime,
+                avatar:avatar
             };    
 
             api.errors = {};

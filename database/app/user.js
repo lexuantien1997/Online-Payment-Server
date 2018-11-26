@@ -69,6 +69,11 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
     require: false
+  },
+  avatar:{
+    type: String,
+    default: "",
+    require: false
   }
 },{collection: 'user'});
 
