@@ -3,13 +3,13 @@ const router = express.Router();
 const User = require('../../../../database/app/user');
 
 //const transaction = require('transaction_module');
-router.post("/user", (req, res) => {
-    var { key } = req.body;
+router.get("/user/:key", (req, res) => {
+    var key  = req.params.key;
     var result = {
         listUser: []
     }
-    // console.log(User.find({phone: { $regex: '.*' + key + '.*' } }).limit(5)) ;
-    User.find({ phone: { $regex: '.*' + key.toString() + '.*' } }).exec(function (err, users) {
+    console.log(key);
+    User.find({ phone: { $regex: '.*' + key + '.*' } }).exec(function (err, users) {
         for(var i=0; i < users.length; i++){
             result.listUser.push({
                 name: users[i].name,

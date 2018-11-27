@@ -14,7 +14,7 @@ class Checkin extends Component {
     const list = this.props.checkin.listCheckin;
     const options =[];
     list.forEach(element => {
-      for(let i = 0 ;i<element.length;i++){
+      for(let i = (element.length-1) ;i>=0;i--){
         console.log(element[i]);
         options.push(<tr>
           <td>{element[i].emailOrPhone}</td>
