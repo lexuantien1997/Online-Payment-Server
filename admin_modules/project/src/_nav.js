@@ -62,6 +62,11 @@ export default {
       ],
     },
     {
+      name: 'Promotion',
+      url: '/promotion',
+      icon: 'icon-speedometer',
+    },
+    {
       name: 'Dashboard',
       url: '/dashboard',
       icon: 'icon-speedometer',

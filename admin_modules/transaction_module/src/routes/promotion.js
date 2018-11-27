@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../../../../database/app/user');
 
 //const transaction = require('transaction_module');
-router.post("/user", (req, res) => {
+router.post("/", (req, res) => {
     var { key } = req.body;
     var result = {
         listUser: []

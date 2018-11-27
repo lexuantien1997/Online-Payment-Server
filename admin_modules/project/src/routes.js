@@ -198,10 +198,15 @@ const Checkin = Loadable({
   loading: Loading,
 });
 
+const Promotion = Loadable({
+  loader: () => import('./views/Promotion'),
+  loading: Loading,
+})
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/transaction', name: 'User To User', component: Transaction },
   { path: '/checkin', name: 'Checkin', component: Checkin },
+  { path: '/promotion', name: 'Promotion', component: Promotion },
 
   { path: '/usermobile/information', exact: true, name: 'User Information', component: UserInfo },
   { path: '/usermobile/histrorytransaction', exact: true, name: 'User Information', component: UserInfo },
