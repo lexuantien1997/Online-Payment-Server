@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  Card, CardBody, CardHeader, Col, Pagination, PaginationItem, PaginationLink, Row, Table } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Pagination, PaginationItem, PaginationLink, Row, Table } from 'reactstrap';
 import { connect } from 'react-redux'
 import { loadTransaction } from '../../../redux/actions/transaction'
 
@@ -14,7 +14,7 @@ class Transaction extends Component {
     //     console.log(e.data.welcomeMsg);
     //     // => Hello world!
     // });
-    
+
     // // listens to all the messages. The only way to catch unnamed events (with no `event` name set)
     // eventSource.onmessage = message => {
     //   console.log(message);
@@ -22,9 +22,9 @@ class Transaction extends Component {
   }
   render() {
     const list = this.props.recharge.listTransaction;
-    const options =[];
+    const options = [];
     list.forEach(element => {
-      for(let i = 0 ;i<element.length;i++){
+      for (let i = (element.length - 1); i >= 0; i--) {
         console.log(element[i]);
         options.push(<tr>
           <td>{element[i].TranID}</td>
