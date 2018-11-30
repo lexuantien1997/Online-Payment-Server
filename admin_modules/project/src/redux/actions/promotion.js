@@ -1,6 +1,6 @@
 const axios= require('axios');
 const loadPromotion = () => dispatch => {
-    axios.get('/manage/checkin/listPromotion')
+    axios.get('/manage/promotion/listPromotion')
       .then(function (response) {
         // handle success
         let tempList = [];
@@ -11,8 +11,7 @@ const loadPromotion = () => dispatch => {
                 Image: response.data[i].Image,
                 Description: response.data[i].Description,
                 Query: response.data[i].Query,
-                Type_Transaction: response.data[i].Type_Transaction,
-                Status: response.data[i].Status
+                Type_Transaction: response.data[i].Type_Transaction
             };
             tempList.push(object);
         }
@@ -30,4 +29,11 @@ const loadPromotion = () => dispatch => {
       })
 }
 
-export {loadPromotion};
+const createPromotion = (promotion) => dispatch => {
+    axios.post('/manage/promotion/create',{
+        promotion: promotion
+      })
+      .then()
+}
+
+export {loadPromotion,createPromotion};

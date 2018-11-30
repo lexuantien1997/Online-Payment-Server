@@ -7,8 +7,7 @@ const PromotionSchema = new mongoose.Schema({
         Image: String,
         Description: String,
         Query:String,
-        Type_Transaction: Number,
-        Status:Number
+        Type_Transaction: Number
 	},{ collection: 'promotion'});
 
 const Promotion =  mongoose.model('promotion',PromotionSchema);

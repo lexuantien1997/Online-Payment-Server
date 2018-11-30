@@ -13,7 +13,8 @@ class Promotion extends Component {
     this.state = {
       isOpenAdd: false,
       file: '',
-      imagePreviewUrl: ''
+      imagePreviewUrl: '',
+      newPromotion:{}
     };
 
   }
@@ -38,7 +39,11 @@ class Promotion extends Component {
     reader.readAsDataURL(file)
 
   }
-
+  _handleSubmit(e) {
+    e.preventDefault();
+    console.log('handle uploading-');
+    this.setState({ isOpenAdd: false })
+  }
   render() {
     const list = this.props.promotion.listPromotion;
     const options = [];
@@ -49,6 +54,10 @@ class Promotion extends Component {
           <td>{element[i].ID_PRMOTION}</td>
           <td>{element[i].Start_date}</td>
           <td>{element[i].End_date}</td>
+          <td>
+          <Button block color="primary">Edit</Button>
+          <Button block color="primary">Delete</Button>
+          </td>
         </tr>)
       }
     });
@@ -81,7 +90,6 @@ class Promotion extends Component {
                     <th>ID</th>
                     <th>Beginning date</th>
                     <th>Ending date</th>
-                    <th>Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -92,7 +100,7 @@ class Promotion extends Component {
             </Card>
           </Col>
         </Row>
-        <Modal isOpen={this.state.isOpenAdd}
+        <Modal isOpen={this.state.isOpenAdd} size="lg"
           className={'modal-primary ' + this.props.className}>
           <ModalHeader >Modal title</ModalHeader>
           <ModalBody>
@@ -138,6 +146,17 @@ class Promotion extends Component {
                   </Col>
                 </Row>
                 <Row>
+                  <Col xs="6">
+                    <FormGroup>
+                      <Label >Target Property Promotion</Label>
+                      <Input type="select">
+                        <option>Age</option>
+                        <option>Registered Date</option>
+                      </Input>
+                    </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
                   <Col xs="12">
                     <FormGroup>
                       <Label htmlFor="name">Image</Label>
@@ -152,7 +171,7 @@ class Promotion extends Component {
             </Card>
           </ModalBody>
           <ModalFooter>
-            <Button color="success" onClick={(e) => this.setState({ isOpenAdd: true })}>Yes</Button>{' '}
+            <Button color="success" onClick={(e)=>this._handleSubmit(e)}>Yes</Button>
             <Button color="danger" onClick={(e) => this.setState({ isOpenAdd: false })}>Cancel</Button>
           </ModalFooter>
         </Modal>
