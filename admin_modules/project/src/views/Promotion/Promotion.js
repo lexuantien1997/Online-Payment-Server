@@ -6,7 +6,6 @@ import {
 } from 'reactstrap';
 import { connect } from 'react-redux'
 import { loadPromotion } from '../../redux/actions/promotion'
-
 const axios = require('axios');
 
 class Promotion extends Component {
@@ -21,7 +20,7 @@ class Promotion extends Component {
       endDate: null,
       endTime: null,
       description: null,
-      transaction: 1,
+      transaction: 0,
       query1: null,
       query2: null,
       query3: null,
@@ -29,8 +28,7 @@ class Promotion extends Component {
       imageUrl: null,
       promotionCon:false,
       messError:"",
-      isError:false,
-      discount:""
+      isError:false
     };
 
   }
@@ -44,8 +42,8 @@ class Promotion extends Component {
 
     let reader = new FileReader();
     let file = e.target.files[0];
+
     reader.onloadend = () => {
-      console.log(reader.result);
       this.setState({
         file: file,
         imagePreviewUrl: reader.result
@@ -58,7 +56,7 @@ class Promotion extends Component {
   _handleSubmit(e) {
     e.preventDefault();
     const {beginDate,beginTime,endDate,endTime,description,transaction,query1,query2,query3,
-    query4,imagePreviewUrl,promotionCon}=this.state;
+    query4,imageUrl,promotionCon}=this.state;
 
     if(beginDate==null){
       this.setState({
@@ -134,47 +132,23 @@ class Promotion extends Component {
       });
       return;
     }
-    if(this.state.imagePreviewUrl==''){
-      this.setState({
-        isOpenAdd:false, 
-        messError:"Wrong Image Preview Url",
-        isError:true
-      });
-      return;
-    }
-    var promotion={
-      beginDate: beginDate,
-      beginTime: beginTime,
-      endDate: endDate,
-      endTime: endTime,
-      description: description,
-      transaction: transaction,
-      query1: query1,
-      query2: query2,
-      query3: query3,
-      query4: query4,
-      promotionCon:promotionCon,
-      imagePreviewUrl
-    }
-    axios.post('/manage/promotion/init',{
-      promotion: promotion
+    axios.post('/managa/promotion/init', {
+      firstName: 'Fred',
+      lastName: 'Flintstone'
     })
-    .then()
-  }
-
-  changeDiscount=(event)=>{
-    console.log( event.target.value);
-    this.setState({discount: event.target.value});
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
   changeTarget= (event) => {
     this.setState({promotionCon: event.target.value});
    }
    changeTransaction= (event) => {
     console.log( event.target.value);
-    this.setState({transaction: event.target.value});
-   }
-   changeDescription= (event)=>{
-    this.setState({description: event.target.value});
+    this.setState({targetPromo: event.target.value});
    }
    changeQuery1= (event) => {
      console.log(event.target.value);
@@ -300,7 +274,7 @@ class Promotion extends Component {
                   <Col xs="12">
                     <FormGroup>
                       <Label htmlFor="name">Description</Label>
-                      <Input onChange={this.changeDescription} type="textarea" id="text-input" name="text-input" placeholder="Text" />
+                      <Input type="textarea" id="text-input" name="text-input" placeholder="Text" />
                     </FormGroup>
                   </Col>
                 </Row>
@@ -314,15 +288,7 @@ class Promotion extends Component {
                         <option value="3">Recharge</option>
                       </Input>
                     </FormGroup>
-                  </Col>  
-                  <Col xs="6">
-                    <FormGroup>
-                      <Label >Discount</Label>
-                      <Input type="text" onChange={this.changeDiscount}>
-                        
-                      </Input>
-                    </FormGroup>
-                  </Col>     
+                  </Col>      
                 </Row>
                 <Row>
                   <Col xs="6">
@@ -361,8 +327,8 @@ class Promotion extends Component {
                         <Col xs="2">
                           <Input type="select" onChange={this.changeQuery3}>
                             <option></option>
-                            <option>&lt;</option>
-                            <option>&le;</option>
+                            <option>&gt;</option>
+                            <option>&ge;</option>
                             <option>=</option>
                           </Input>
                         </Col>
