@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Col, Container, Row, Badge, Table, Card, Button,
   Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input, CardFooter, Label, Form, CardBody,
-  CardHeader, FormText
+  CardHeader, Alert
 } from 'reactstrap';
 import { connect } from 'react-redux'
 import { loadPromotion } from '../../redux/actions/promotion'
@@ -14,7 +14,20 @@ class Promotion extends Component {
       isOpenAdd: false,
       file: '',
       imagePreviewUrl: '',
-      newPromotion:{}
+      beginDate: null,
+      beginTime: null,
+      endDate: null,
+      endTime: null,
+      description: null,
+      transaction: 0,
+      query1: null,
+      query2: null,
+      query3: null,
+      query4: null,
+      imageUrl: null,
+      promotionCon:false,
+      messError:"",
+      isError:false
     };
 
   }
@@ -41,9 +54,124 @@ class Promotion extends Component {
   }
   _handleSubmit(e) {
     e.preventDefault();
-    console.log('handle uploading-');
-    this.setState({ isOpenAdd: false })
+    const {beginDate,beginTime,endDate,endTime,description,transaction,query1,query2,query3,
+    query4,imageUrl,promotionCon}=this.state;
+
+    if(beginDate==null){
+      this.setState({
+        isOpenAdd:false, 
+        messError:"Wrong Beginning Date",
+        isError:true
+      });
+     return ;
+    }
+    if(beginTime==null){
+      this.setState({
+        isOpenAdd:false, 
+        messError:"Wrong Beinning Time",
+        isError:true
+      });
+      return;
+    }
+    if(endDate==null){
+      this.setState({
+        isOpenAdd:false, 
+        messError:"Wrong End Date",
+        isError:true
+      });
+      return;
+    }
+    if(endTime==null){
+      this.setState({
+        isOpenAdd:false, 
+        messError:"Wrong Beginning Time",
+        isError:true
+      });
+      return;
+    }
+    if(description==null){
+      this.setState({
+        isOpenAdd:false, 
+        messError:"Wrong Description",
+        isError:true
+      });
+      return;
+    }
+    if(query1==null){
+      this.setState({
+        isOpenAdd:false, 
+        messError:"Wrong Query",
+        isError:true
+      });
+      return;
+    }
+    if(query2==null){
+      this.setState({
+        isOpenAdd:false, 
+        messError:"Wrong Query",
+        isError:true
+      });
+      return;
+    }
+
+    if(query3==null){
+      this.setState({
+        isOpenAdd:false, 
+        messError:"Wrong Query",
+        isError:true
+      });
+      return;
+    }
+
+    if(query4==null){
+      this.setState({
+        isOpenAdd:false, 
+        messError:"Wrong Query",
+        isError:true
+      });
+      return;
+    }
+    
   }
+  changeTarget= (event) => {
+    this.setState({promotionCon: event.target.value});
+   }
+   changeTransaction= (event) => {
+    console.log( event.target.value);
+    this.setState({targetPromo: event.target.value});
+   }
+   changeQuery1= (event) => {
+     console.log(event.target.value);
+    this.setState({query1: event.target.value});
+   }
+   changeQuery2= (event) => {
+    console.log( event.target.value);
+    this.setState({query2: event.target.value});
+   }
+   changeQuery3= (event) => {
+    console.log( event.target.value);
+    this.setState({query3: event.target.value});
+   }
+   changeQuery4= (event) => {
+    console.log( event.target.value);
+    this.setState({query4: event.target.value});
+   }
+   changeBeginDate= (event) => {
+    console.log( event.target.value);
+    this.setState({beginDate: event.target.value});
+   }
+   changeBeginTime= (event) => {
+    console.log( event.target.value);
+    this.setState({beginTime: event.target.value});
+   }
+   changeEndDate= (event) => {
+    console.log( event.target.value);
+    this.setState({endDate: event.target.value});
+   }
+   changeEndTime= (event) => {
+    console.log( event.target.value);
+    this.setState({endTime: event.target.value});
+   }
   render() {
     const list = this.props.promotion.listPromotion;
     const options = [];
@@ -55,14 +183,14 @@ class Promotion extends Component {
           <td>{element[i].Start_date}</td>
           <td>{element[i].End_date}</td>
           <td>
-          <Button block color="primary">Edit</Button>
-          <Button block color="primary">Delete</Button>
+            <Button block color="primary">Edit</Button>
+            <Button block color="primary">Delete</Button>
           </td>
         </tr>)
       }
     });
 
-    let {imagePreviewUrl} = this.state;
+    let { imagePreviewUrl } = this.state;
     let $imagePreview = null;
     if (imagePreviewUrl) {
       $imagePreview = (<img style={imagePreviewStyle} src={imagePreviewUrl} />);
@@ -113,23 +241,30 @@ class Promotion extends Component {
                   <Col md="4">
                     <Label htmlFor="date-input">Beginning Date</Label>
                   </Col>
-                  <Col xs="12" md="8">
-                    <Input type="date" id="date-input" name="date-input" placeholder="date" />
+                  <Col xs="12" md="4">
+                    <Input onChange={this.changeBeginDate} type="date" id="date-input" name="date-input" placeholder="date" />
+                  </Col>
+
+                  <Col xs="12" md="4">
+                    <Input onChange={this.changeBeginTime} type="time" id="date-input" name="date-input" placeholder="date" />
                   </Col>
                 </FormGroup>
                 <FormGroup row>
                   <Col md="4">
                     <Label htmlFor="date-input">Ending</Label>
                   </Col>
-                  <Col xs="12" md="8">
-                    <Input type="date" id="date-input" name="date-input" placeholder="date" />
+                  <Col xs="12" md="4">
+                    <Input onChange={this.changeEndDate} type="date" id="date-input" name="date-input" placeholder="date" />
+                  </Col>
+                  <Col xs="12" md="4">
+                    <Input onChange={this.changeEndTime} type="time" id="date-input" name="date-input" placeholder="date" />
                   </Col>
                 </FormGroup>
                 <Row>
                   <Col xs="12">
                     <FormGroup>
                       <Label htmlFor="name">Description</Label>
-                      <Input type="text" id="text-input" name="text-input" placeholder="Text" />
+                      <Input type="textarea" id="text-input" name="text-input" placeholder="Text" />
                     </FormGroup>
                   </Col>
                 </Row>
@@ -137,22 +272,60 @@ class Promotion extends Component {
                   <Col xs="6">
                     <FormGroup>
                       <Label >Transaction</Label>
-                      <Input type="select">
-                        <option>User to user</option>
-                        <option>User to agent</option>
-                        <option>Recharge</option>
+                      <Input type="select" onChange={this.changeTransaction}>
+                        <option value="1">User to user</option>
+                        <option value="2">User to agent</option>
+                        <option value="3">Recharge</option>
                       </Input>
                     </FormGroup>
-                  </Col>
+                  </Col>      
                 </Row>
                 <Row>
                   <Col xs="6">
                     <FormGroup>
                       <Label >Target Property Promotion</Label>
-                      <Input type="select">
-                        <option>Age</option>
-                        <option>Registered Date</option>
+                      <Input type="select" onChange={this.changeTarget} value={this.state.promotionCon}>
+                        <option value="true">Age</option>
+                        <option value="false">Registered Date</option>
                       </Input>
+                    </FormGroup>
+                  </Col>
+                  <Col xs="6">
+                    <FormGroup>
+                      Chọn 1 chiều thôi nghen. Nếu lỡ rồi thì F5.
+                    </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                <Col xs="12">
+                    <FormGroup>
+                      <Label >Query</Label>
+                      <Row>
+                        <Col xs="3">
+                          <Input onChange={this.changeQuery1} type={this.state.promotionCon ? "number" : "date"} />
+                        </Col>
+                        <Col xs="2">
+                          <Input type="select" onChange={this.changeQuery2}>
+                            <option></option>
+                            <option>&lt;</option>
+                            <option>&le;</option>
+                          </Input>
+                        </Col>
+                        <Col xs="2">
+                          Value
+                        </Col>
+                        <Col xs="2">
+                          <Input type="select" onChange={this.changeQuery3}>
+                            <option></option>
+                            <option>&gt;</option>
+                            <option>&ge;</option>
+                            <option>=</option>
+                          </Input>
+                        </Col>
+                        <Col xs="3">
+                          <Input onChange={this.changeQuery4} type={this.state.promotionCon?"number":"date"} />
+                        </Col>
+                      </Row>
                     </FormGroup>
                   </Col>
                 </Row>
@@ -171,8 +344,19 @@ class Promotion extends Component {
             </Card>
           </ModalBody>
           <ModalFooter>
-            <Button color="success" onClick={(e)=>this._handleSubmit(e)}>Yes</Button>
             <Button color="danger" onClick={(e) => this.setState({ isOpenAdd: false })}>Cancel</Button>
+            <Button color="success" onClick={(e) => this._handleSubmit(e)}>Yes</Button>
+          </ModalFooter>
+        </Modal>
+        <Modal isOpen={this.state.isError}>
+          <ModalHeader >Modal title</ModalHeader>
+          <ModalBody>
+            <Alert color="danger" >
+              {this.state.messError}
+            </Alert>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={(e) => this.setState({ isError: false })}>OK</Button>
           </ModalFooter>
         </Modal>
       </div>
@@ -187,6 +371,8 @@ const imagePreviewStyle = {
 const mapStateToProps = state => ({
   promotion: state.promotionReducer,
 })
+
+
 // export default UserToUser;
 export default connect(mapStateToProps, { loadPromotion })(Promotion);
 
