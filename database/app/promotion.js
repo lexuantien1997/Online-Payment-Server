@@ -2,12 +2,13 @@ const mongoose = require('mongoose');
 
 const PromotionSchema = new mongoose.Schema({
         ID_PRMOTION: String,
-        Start_date: Date,
-        End_date: Date,
+        Start_date: String,
+        End_date: String,
         Image: String,
         Description: String,
         Query:String,
-        Type_Transaction: Number
+        Type_Transaction: Number,
+        discount:String
 	},{ collection: 'promotion'});
 
 const Promotion =  mongoose.model('promotion',PromotionSchema);

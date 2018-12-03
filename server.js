@@ -49,6 +49,8 @@ app.disable('x-powered-by');
 // To get data from Form we need bodyParser
 // @param extended : false => value can be string or array
 // @param extended : true => value can be any type
+app.use(bodyParser.json({limit: '50mb', extended: true}))
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
