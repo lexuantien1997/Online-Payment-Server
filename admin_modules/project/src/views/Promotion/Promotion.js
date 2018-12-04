@@ -56,7 +56,7 @@ class Promotion extends Component {
   _handleSubmit(e) {
     e.preventDefault();
     const {beginDate,beginTime,endDate,endTime,description,transaction,query1,query2,query3,
-    query4,imageUrl,promotionCon}=this.state;
+    query4,imagePreviewUrl,promotionCon,discount}=this.state;
 
     if(beginDate==null){
       this.setState({
@@ -85,7 +85,7 @@ class Promotion extends Component {
     if(endTime==null){
       this.setState({
         isOpenAdd:false, 
-        messError:"Wrong Beginning Time",
+        messError:"Wrong End Time",
         isError:true
       });
       return;
@@ -94,6 +94,14 @@ class Promotion extends Component {
       this.setState({
         isOpenAdd:false, 
         messError:"Wrong Description",
+        isError:true
+      });
+      return;
+    }
+    if(transaction==0){
+      this.setState({
+        isOpenAdd:false, 
+        messError:"Wrong Transaction",
         isError:true
       });
       return;
@@ -132,23 +140,47 @@ class Promotion extends Component {
       });
       return;
     }
-    axios.post('/managa/promotion/init', {
-      firstName: 'Fred',
-      lastName: 'Flintstone'
+    if(this.state.imagePreviewUrl==''){
+      this.setState({
+        isOpenAdd:false, 
+        messError:"Wrong Image Preview Url",
+        isError:true
+      });
+      return;
+    }
+    var promotion={
+      beginDate: beginDate,
+      beginTime: beginTime,
+      endDate: endDate,
+      endTime: endTime,
+      description: description,
+      transaction: transaction,
+      query1: query1,
+      query2: query2,
+      query3: query3,
+      query4: query4,
+      promotionCon:promotionCon,
+      imagePreviewUrl,
+      discount
+    }
+    axios.post('/manage/promotion/init',{
+      promotion: promotion
     })
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    .then()
+  }
+  changeDescription= (event)=>{
+    this.setState({description: event.target.value});
+  }
+  changeDiscount=(event)=>{
+    console.log( event.target.value);
+    this.setState({discount: event.target.value});
   }
   changeTarget= (event) => {
     this.setState({promotionCon: event.target.value});
    }
    changeTransaction= (event) => {
     console.log( event.target.value);
-    this.setState({targetPromo: event.target.value});
+    this.setState({transaction: event.target.value});
    }
    changeQuery1= (event) => {
      console.log(event.target.value);
@@ -193,7 +225,7 @@ class Promotion extends Component {
           <td>{element[i].Start_date}</td>
           <td>{element[i].End_date}</td>
           <td>
-            <Button block color="primary">Edit</Button>
+            <Button block color="primary" >Edit = ( Delete => Add new)</Button>
             <Button block color="primary">Delete</Button>
           </td>
         </tr>)
@@ -274,7 +306,7 @@ class Promotion extends Component {
                   <Col xs="12">
                     <FormGroup>
                       <Label htmlFor="name">Description</Label>
-                      <Input type="textarea" id="text-input" name="text-input" placeholder="Text" />
+                      <Input onChange={this.changeDescription} type="textarea" id="text-input" name="text-input" placeholder="Text" />
                     </FormGroup>
                   </Col>
                 </Row>
@@ -289,6 +321,14 @@ class Promotion extends Component {
                       </Input>
                     </FormGroup>
                   </Col>      
+                  <Col xs="6">
+                    <FormGroup>
+                      <Label >Discount</Label>
+                      <Input type="text" onChange={this.changeDiscount}>
+                        
+                      </Input>
+                    </FormGroup>
+                  </Col>     
                 </Row>
                 <Row>
                   <Col xs="6">
@@ -327,8 +367,8 @@ class Promotion extends Component {
                         <Col xs="2">
                           <Input type="select" onChange={this.changeQuery3}>
                             <option></option>
-                            <option>&gt;</option>
-                            <option>&ge;</option>
+                            <option>&lt;</option>
+                            <option>&le;</option>
                             <option>=</option>
                           </Input>
                         </Col>

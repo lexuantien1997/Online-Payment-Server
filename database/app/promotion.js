@@ -8,7 +8,7 @@ const PromotionSchema = new mongoose.Schema({
         Description: String,
         Query:String,
         Type_Transaction: Number,
-        discount:String
+        Discount:String
 	},{ collection: 'promotion'});
 
 const Promotion =  mongoose.model('promotion',PromotionSchema);
