@@ -1,4 +1,5 @@
 const registerValidate = require('../validations/register.validation');
+const firebase = require("../../../../configs/firebase.config");
 const registerService = require('../services/register.service');
 const User = require('../../../../database/app/user');
 const errorNames = require('../validations/errors-name');
@@ -18,6 +19,12 @@ function logError(info, data,res,errors) {
       return res.status(200).json(api); 
     }
   }
+}
+
+
+
+const registerUser = (data,country,callback) => {
+
 }
 
 /**

@@ -1,35 +1,19 @@
-// Express is a minimal and flexible Node.js web application framework 
-// Provides a robust set of features for web and mobile applications.
 const express = require('express');
-// dotenv to connect environment
 const dotenv = require("dotenv");
-// mongoDB for node js
-const mongoose = require('mongoose');
-// This is middleware to handle HTTP post request, json, text and encode url
 const bodyParser = require('body-parser');
-
 const cors = require('cors');
 const compression = require('compression');
-let _ = require('lodash');
+
 
 // LOCAL IMPORT
-const routes = require("./routes");
-
-const app = express();
-
-
-dotenv.config();
-
-
-// Database config
-mongoose
-    .connect(/*process.env.MONGO_OFFLINE ||*/ process.env.MONGO_ONLINE, { useNewUrlParser: true })
-    .then(() => console.log('MongoDB connected successfully'))
-    .catch(err => console.log(err));
-
-
+const routes = require("./routes"); // handle all routes
+const sseConfig = require("./configs/sse.config"); // for sse
+const mongooseConfig = require("./configs/mongoose.config"); // for mongo
+const firebaseConfig = require("./configs/firebase.config");
 // Init express
-
+// Express is a minimal and flexible Node.js web application framework 
+// Provides a robust set of features for web and mobile applications.
+const app = express();
 
 // It's header
 // we should remove it because it will tell the client know what's the framework you are using
@@ -38,12 +22,12 @@ app.disable('x-powered-by');
 // Use gzip compression
 // Gzip compressing can greatly decrease the size of the response body and hence increase the speed of a web app
 // Use the compression middleware for gzip compression in your express app
-// app.use(compression());
+app.use(compression());
 
-// // // cors
-// app.use(cors());
+// cors
+app.use(cors());
 
-
+// This is middleware to handle HTTP post request, json, text and encode url
 // Way to format data JSON - XML - URL - FORM DATA
 // Body parser return a function activate like middleware . Listen data form client and get from request.body
 // To get data from Form we need bodyParser
@@ -52,62 +36,74 @@ app.disable('x-powered-by');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-let sseExpress = require('sse-express');
-let globalId = 1;
-//let connections = [];
-//const global_connection = require("./admin_modules/transaction_module/src/sse/variable");
-global_connection = [];
+// ===============================================
+dotenv.config(); // dotenv to connect environment
+//sseConfig(); 
+mongooseConfig();
+firebaseConfig.initFirebase();
+// ===============================================
 
-app.use((req, res, next) => {
-    // setup cors headers
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    next();
+app.get('/add-firebase', (req, res) => {
+  console.log("add - firebase");
+  let userRef = firebaseConfig.getDatabase().ref().child("user");
+  userRef.push({
+    name: "Lê Xuân Tiến",
+    phone: "+84932311434"
   });
 
-  app.post('/sendMessage', (req, res) => {
-    res.writeHead(200, {
-      'Access-Control-Allow-Origin': '*'
-    });
+  // let verify = firebaseConfig.getDatabase().ref().child("verify");
+  // let timestamp = Date.now();
+  // verify.push({
+  //   phone: 0932696969,
+  //   country:"VN",
+  //   request_id: "KSDFSDF696969",
+  //   expired: timestamp
+  // });
+});
 
-    let {type,name}=req.body;
-    if(type==1){
-      global_connection.forEach(function(connection) {
-        connection.sse({
-          event: 'message',
-          data: {
-            name: req.body.name,
-            money: req.body.money
-          },
-          id: Date.now() + req.body.userId
-        });
-      });
-    }
-    
-    res.end();
+app.get("/register-firebase", (req,res) => {
+  firebaseConfig.getAuth().createUser({
+    emailVerified: false,
+    phoneNumber: "+840932311434",
+    password: "secretPassword",
+    displayName: "John Doe",
+    photoURL: "http://www.example.com/12345678/photo.png",
+    disabled: false,
+    money:"123456789"
+  }).then(function(userRecord) {
+    // See the UserRecord reference doc for the contents of userRecord.
+    console.log("Successfully created new user:", userRecord);
+  })
+  .catch(function(error) {
+    console.log("Error creating new user:", error);
+  });
+});
+
+app.get('/update-firebase', (req, res) => {
+  console.log("update - firebase");
+  firebaseConfig.getDatabase().ref()
+    .child("users/-LSw7H_QbSyRm6gCivXt")
+    .update({name: "shinigami190"}, err => {
+        if(err != null) res.status(200).json({type: "success"});
+        else res.status(200).json(err);
+    })
+    // .on("child_changed", snapshot => {
+    //   if(snapshot) res.status(200).json({type: "success"});
+    // });
   });
 
-  app.get('/updates', sseExpress(), function(req, res) {
-    global_connection.push(res);
-
-    res.sse([{
-      data: 'hello'
-    }, {
-      // send id to user
-      event: 'connected',
-      data: {
-        id: globalId
-      }
-    }]);
-    globalId++;
-
-    req.on("close", function() {
-      _.remove(app.locals.global_connection, res);
-      console.log('clients: ' + global_connection.length);
-    });
-
-    console.log(`Hello, ${globalId}!`);
+app.get('/query-firebase', (req, res) => {
+  console.log("query - firebase");
+  let userRef = firebaseConfig.getDatabase().ref().child("users");
+  userRef.orderByChild("name").equalTo("lalala").once("value", (snapshot) => {
+   // let items = [];
+   // snapshot.forEach(item => { items.push(item) });
+    console.log(Object.keys(snapshot.val())[0]);
   });
+})
+
+
 // route splitting
 routes(app);
 
-app.listen(8080, () => console.log('Server running on port: ' + 8080));
+app.listen( process.env.PORT, () => console.log('Server running on port: ' + process.env.PORT));
