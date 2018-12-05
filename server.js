@@ -49,7 +49,8 @@ app.get('/add-firebase', (req, res) => {
   let userRef = firebaseConfig.getDatabase().ref().child("user");
   userRef.push({
     name: "Lê Xuân Tiến",
-    phone: "+84932311434"
+    phone: "+84932311434",
+    password: "$2y$10$Jvwka22iZlKfeAroQaimO.qZNhWyrfQmcTf2vJHDvuFCQYN.bmQqG"
   });
 
   // let verify = firebaseConfig.getDatabase().ref().child("verify");

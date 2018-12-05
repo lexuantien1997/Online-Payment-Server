@@ -1,31 +1,35 @@
 const registerValidate = require('../validations/register.validation');
 const firebase = require("../../../../configs/firebase.config");
-const registerService = require('../services/register.service');
+// const registerService = require('../services/register.service');
+const registerService = require('../services/RegisterService');
 const User = require('../../../../database/app/user');
-const errorNames = require('../validations/errors-name');
+const {PHONE_NUMBER_NOTSEND} = require('../validations/errors-name');
+
+const { REGISTER_SUCCESS,PHONE_NUMBER_NOT_SEND } = require("../cbInstance");
 
 const api = {
   status: 1,
   errors: {}
 };
 
-function logError(info, data,res,errors) {
+function callback(info, data,res,errors) {
   console.log('info: '+ info +' - data: ' + JSON.stringify(data));
   switch (info) {
-    case 'REGISTER_SUCCESS': 
+    case REGISTER_SUCCESS: 
     {
       api.status = 0;
       api.errors = errors;
       return res.status(200).json(api); 
     }
+    case PHONE_NUMBER_NOT_SEND:
+    {
+      api.status = 0;
+      api.errors.phone = PHONE_NUMBER_NOTSEND;
+      return res.status(200).json(api); 
+    }
   }
 }
 
-
-
-const registerUser = (data,country,callback) => {
-
-}
 
 /**
  * @description: register client user by:
@@ -44,10 +48,9 @@ module.exports =  (req,res) => {
   // api response to app
   // status: 0 -> success
   // status: 1 -> found error
-
 	let errors;
-  let { phone } = req.body;
+  req.body.phone = "+84" + req.body.phone;
   console.log(req.body);
 	// Check user name / phone is used or not by access database
-  registerService.registerUser(req.body,'VN', (info, data) => logError(info,data,res,errors));
+  registerService.registerUser(req.body, (info, data) => callback(info,data));
 }

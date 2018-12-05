@@ -12,7 +12,7 @@ router.post('/login', (req,res) => {
   loginController(req, res)
 });
 
-router.post('/register', (req,res) => {  
+router.post('/register', (req,res) => {  //
   console.log("Tracking: User with phone: " + req.body.phone + " register");
   registerController(req, res)
 });
@@ -22,7 +22,7 @@ router.post('/register-PIN', (req,res) => {
   registerPinController(req, res)
 });
 
-router.post('/send-verify', (req,res) => {  
+router.post('/send-verify', (req,res) => {  //
   console.log("Tracking: User with phone: " + req.body.phone + " need send phone verify");
   verifyRegisterController.verifyCodeController(req, res)
 });
@@ -34,10 +34,6 @@ router.post('/forgot-password', (req,res) => {
 router.post('/update-information-user', (req,res) => {
   console.log("Tracking: User " + req.body.email + " start update information user");
   updateInformationUser(req,res);
-});
-
-router.get('/123', (req,res) => {
-  res.json({msg:"success"});
 });
 
 // Config express route in ver 4.x

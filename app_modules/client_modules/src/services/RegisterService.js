@@ -9,7 +9,11 @@ const {
   ADD_USER_DATA_SUCCESS,
   REGISTER_SUCCESS,
   VERIFY_TOKEN_ERROR,
-  CANCEL_VERIFICATION_ERROR
+  CANCEL_VERIFICATION_ERROR,
+  CANCEL_VERIFICATION_SUCCESS,
+  PHONE_NUMBER_NOT_SEND,
+  UPDATE_VERIFY_DATA_SUCCESS,
+  UPDATE_VERIFY_DATA_ERROR
 } = require("../cbInstance");
 const firebase = require("../../../../configs/firebase.config");
 const passwordCrypt =  require('../utils/password.crypt');
@@ -35,35 +39,44 @@ const checkEmailExist = (email) => new Promise((resolve,reject) => {
     .catch(err => reject())
 })
 
-const addNewVerifyData = (phone, request_id, expired, calback) => {
+const checkPhoneVerifyExist = (phone) => new Promise((resolve,reject) => {
+  let verifyRef = firebase.getDatabase().ref().child("verify");
+  verifyRef
+    .orderByChild("phone")
+    .equalTo(phone)
+    .once("value", (data) => resolve(data.val()));
+})
+
+const addNewVerifyData = (phone, request_id, expired, callback) => {
   let verify = firebase.getDatabase().ref().child("verify");
   verify.push({
     phone,
     request_id,
     expired
   }, error => {
-    if(error) calback(ADD_VERIFY_DATA_ERROR,error)
+    if(error) callback(ADD_VERIFY_DATA_ERROR,error)
     else {
-      calback(ADD_VERIFY_DATA_SUCCESS);
-      calback(SEND_TOKEN_SUCCESS);
+      callback(ADD_VERIFY_DATA_SUCCESS);
+      callback(SEND_TOKEN_SUCCESS);
     } 
   });
 }
 
-const updateVerifyData = (phone, request_id, expired, calback, uid) => {
+const updateVerifyData = (phone, request_id, expired, callback, uid) => {
   let verify = firebase.getDatabase().ref().child("verify");
-  verify.push({
+  verify.update({
     phone,
     request_id,
     expired
   }, error => {
-    if(error) calback(ADD_VERIFY_DATA_ERROR,error)
+    if(error) callback(UPDATE_VERIFY_DATA_ERROR,error)
     else {
-      calback(ADD_VERIFY_DATA_SUCCESS);
-      calback(SEND_TOKEN_SUCCESS);
+      callback(UPDATE_VERIFY_DATA_SUCCESS);
+      callback(SEND_TOKEN_SUCCESS);
     } 
   });
 }
+
 
 const addNewUserData = (name,phone,password,requestId,callback) => {
   password = passwordCrypt.hashPassword(password);
@@ -73,16 +86,39 @@ const addNewUserData = (name,phone,password,requestId,callback) => {
     name,
     requestId,
     password,
-    verify: true
+    verified: true,
+    email:"",
+    emailVerify: false,
+    avatar:"",
+    money:0,
+    typeMoney:"VNĐ",
+    address:"Việt Nam",
+    gender: false,
+    memberAt: Date.now(),
+    isFirstTime: true,
+    birthday: Date.now(),
+    securityPass: ""
   }, error => {
-    if(error) calback(ADD_USER_DATA_ERROR,error)
+    if(error) callback(ADD_USER_DATA_ERROR,error)
     else {
-      calback(ADD_USER_DATA_SUCCESS);
-      calback(REGISTER_SUCCESS,phone);
+      callback(ADD_USER_DATA_SUCCESS);
+      callback(REGISTER_SUCCESS,phone);
     } 
   });
 }
 
+const cancelVerificationRequest = (prevRequestID, callback) => new Promise((resolve, reject) => {
+  nexmo.verify.control({request_id:prevRequestID, cmd: 'cancel'}, (err, result) => {
+    if(err) reject(err); 
+    else {      
+      console.log(result);
+      if(result && result.status == '0') {
+        callback(CANCEL_VERIFICATION_SUCCESS);
+        resolve();
+      } else { reject({requestId: result.request_Id}); }
+    }
+  });
+})
 
 const sendToken = (phone,callback,verifyData) => {
   console.log(verifyData);
@@ -91,7 +127,7 @@ const sendToken = (phone,callback,verifyData) => {
     else { 
       if(result.status == '0') { // success        
         console.log('Start send token for number: ' + phone + " whith request id: " + result.request_id);
-        if(verifyData) updateVerifyData(phone,result.request_id,Date.now());
+        if(verifyData != null) updateVerifyData(phone,result.request_id,Date.now(),callback);
         else addNewVerifyData(phone, result.request_id,Date.now(), callback);
       } else  callback(SEND_TOKEN_ERROR, {message: result.error_text, requestId: result.request_id});         
     }
@@ -116,26 +152,22 @@ const beforeSendToken = (phone, callback) => {
           let val = data.val();
           if(val) {
             let uid = Object.keys(val)[0]; // stupid code
-            if(Date.now() - val[uid].expired > process.env.EXPIRED) sendToken(phone,callback,val);           
+            if(Date.now() - val[uid].expired > process.env.EXPIRED) {
+              // remove pre request:
+              cancelVerificationRequest(val[uid].request_id,callback)
+                .then( () => sendToken(phone,callback,val))
+                .catch(err => callback(CANCEL_VERIFICATION_ERROR,err));
+            }           
           } else sendToken(phone,callback,null);
         });
       }
     })
 }
 
-const cancelVerificationRequest = (data, callback) => {
-  nexmo.verify.control({request_id:data.requestId, cmd: 'cancel'}, (err, result) => {
-    if(err) callback(CANCEL_VERIFICATION_ERROR,err);
-    else {      
-      console.log(result);
-      if(result.status == '0') {
-//        data.request_Id = null;
-      } else { callback('CANCEL_ERROR',{requestId: result.request_Id}); }
-    }
-  });
-}
+
 
 const verifyToken = (data, request_id,callback) => {
+  console.log(request_id);
   nexmo.verify.check({request_id, code: data.verifyCode}, (err, result) => {
     if(err) callback(NEXMO_SERVER_ERROR);
     else {
@@ -147,7 +179,21 @@ const verifyToken = (data, request_id,callback) => {
   });
 }
 
+const registerUser = (data,callback) => {
+  checkPhoneVerifyExist(data.phone)
+    .then(status => {
+      if(status != null) {
+        console.log(status);
+        let uid = Object.keys(status)[0];
+        verifyToken(data,status[uid].request_id, callback); 
+      } else { // not register or last time not update code
+        callback(PHONE_NUMBER_NOT_SEND);
+      }
+    })
+}
+
 
 module.exports = {
-  beforeSendToken
+  beforeSendToken,
+  registerUser
 }

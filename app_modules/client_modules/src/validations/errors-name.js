@@ -17,6 +17,7 @@ const CONFIRM_PASSWORD_EMPTY = 'confirm password is require';
 
 const PHONE_EMPTY = 'phone is required';
 const PHONE_INVALID = 'phone is invalid';
+const PHONE_NUMBER_NOTSEND = 'phone number not send';
 
 const VERIFY_CODE_EMPTY = 'verify code is required';
 
@@ -36,6 +37,8 @@ const EMAIL_PHONE_NOT_EXIST = 'email phone not exist';
 
 const UPDATE_INFOR_USER_ERROR = 'update information user error';
 const UPDATE_INFOR_USER_PHONE_NOT_EXIST = 'update information user error because phone not exist ';
+
+const NOT_VERIFY_EMAIL = "email not verify";
 
 module.exports = {
     NAME_EMPTY,
@@ -59,6 +62,7 @@ module.exports = {
 
     PHONE_INVALID,
     PHONE_EMPTY,
+    PHONE_NUMBER_NOTSEND,
 
     USERNAME_EXIST,
     EMAIL_EXIST,
@@ -73,5 +77,8 @@ module.exports = {
     EMAIL_PHONE_NOT_EXIST,
     
     UPDATE_INFOR_USER_ERROR,
-    UPDATE_INFOR_USER_PHONE_NOT_EXIST
+    UPDATE_INFOR_USER_PHONE_NOT_EXIST,
+
+    NOT_VERIFY_EMAIL
+
 };
