@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const compression = require('compression');
 
-
 // LOCAL IMPORT
 const routes = require("./routes"); // handle all routes
 const sseConfig = require("./configs/sse.config"); // for sse
@@ -33,6 +32,8 @@ app.use(cors());
 // To get data from Form we need bodyParser
 // @param extended : false => value can be string or array
 // @param extended : true => value can be any type
+app.use(bodyParser.json({limit: '50mb', extended: true}))
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
