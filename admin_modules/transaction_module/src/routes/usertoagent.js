@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const firebase = require("../../../../configs/firebase.config");
 
 //const transaction = require('transaction_module');
 router.post("/", (req, res) => {
@@ -14,7 +15,8 @@ router.post("/", (req, res) => {
             //+((DateGet==undefined)?"DateGet: undefined":("DateGet: "+DateGet))+"\n"
         );
     else {
-        const newTransaction = new Transaction({
+        let transaction = firebase.getDatabase().ref().child("transaction");
+        transaction.push({
             Name: Name,
             TranID:tranID,
             Target: Target,
@@ -23,11 +25,8 @@ router.post("/", (req, res) => {
             DateTrans: new Date(),
             Type: 2,
             FeeTrans: 0
-        });
-        newTransaction.save().then(item =>
-            res.json(JSON.stringify(req.body))
-        ).catch(err => {
-            console.log(err);
+        }, error => {
+            console.log(error);
         });
     }
     const result={

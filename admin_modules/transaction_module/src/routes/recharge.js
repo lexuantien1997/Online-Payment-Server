@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../../../../database/app/user');
 const axios = require('axios');
-const Transaction = require('../../../../database/admin/transaction');
+const firebase = require("../../../../configs/firebase.config");
 
 router.post("/", (req, res) => {
     // Save transaction
@@ -14,7 +14,8 @@ router.post("/", (req, res) => {
             + ((money == undefined) ? "Money: undefined" : ("Money: " + money))
         );
     else {
-        const newTransaction = new Transaction({
+        let recharge = firebase.getDatabase().ref().child("recharge");
+        recharge.push({
             Name: phone,
             Phone: phone,
             TranID: tranID,
@@ -24,11 +25,8 @@ router.post("/", (req, res) => {
             DateTrans: new Date(),
             Type: 3,
             FeeTrans: 0
-        });
-        newTransaction.save().then(item =>
-            console.log("saved")
-        ).catch(err => {
-            console.log(err);
+        }, error => {
+            console.log(error);
         });
     }
 

@@ -14,6 +14,7 @@ const loadPromotion = () => dispatch => {
                 Type_Transaction: response.data[i].Type_Transaction
             };
             tempList.push(object);
+            console.log(object);
         }
         // console.log(empObj);
         // var {dispatch}=this.props;
