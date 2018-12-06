@@ -7,27 +7,27 @@ const forgotPassController = require('../controllers/forgot-password.controller'
 const updateInformationUser = require('../controllers/update-information-user.controller');
 const router = express.Router();
 
-router.post('/login', (req,res) => {  
+router.post('/login', (req,res) => { // fixed  
   console.log("Tracking: User " + req.body.emailOrPhone + " start login");
-  loginController(req, res)
+  loginController(req, res);
 });
 
-router.post('/register', (req,res) => {  //
+router.post('/register', (req,res) => {  // fixed
   console.log("Tracking: User with phone: " + req.body.phone + " register");
-  registerController(req, res)
+  registerController(req, res);
 });
 
-router.post('/register-PIN', (req,res) => {  
+router.post('/register-PIN', (req,res) => {  // fixed
   console.log("Tracking: User with id: " + req.body.id + " register PIN with code: " + req.body.securityPass);
-  registerPinController(req, res)
+  registerPinController(req, res);
 });
 
-router.post('/send-verify', (req,res) => {  //
+router.post('/send-verify', (req,res) => {  // fixed
   console.log("Tracking: User with phone: " + req.body.phone + " need send phone verify");
-  verifyRegisterController.verifyCodeController(req, res)
+  verifyRegisterController.verifyCodeController(req, res);
 });
 
-router.post('/forgot-password', (req,res) => {
+router.post('/forgot-password', (req,res) => { // fixed
   forgotPassController(req,res);
 });
 

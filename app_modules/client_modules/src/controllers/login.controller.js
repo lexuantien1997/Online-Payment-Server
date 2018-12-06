@@ -27,8 +27,8 @@ const login = (_user,password,type,res) => {
     if(passwordCrypt.comparePassowrd(password,_user[uid].password)) { 
       console.log(1)
       api.status = 0;
-      let { name, phone, money, gender, memberAt, address, email, birthday, isFirstTime,avatar } = _user[uid];
-      api.user = {id: uid, name,phone,money, gender,memberAt,address,email,birthday,isFirstTime,avatar} ;  
+      let { name, phone, money, gender, memberAt, address, email, birthday, isFirstTime,avatar,typeMoney } = _user[uid];
+      api.user = {id: uid, name,phone,money, gender,memberAt,address,email,birthday,isFirstTime,avatar,typeMoney} ;  
       api.errors = {};
       console.log("Tracking: " + uid + " _ " + phone + " login successfully");
       return res.status(200).json(api);   

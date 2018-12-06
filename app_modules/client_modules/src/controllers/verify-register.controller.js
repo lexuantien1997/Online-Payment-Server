@@ -1,20 +1,17 @@
-//const registerService= require('../services/register.service');
 const registerService= require('../services/RegisterService');
 const User = require('../../../../database/app/user');
-
+const { SEND_TOKEN_SUCCESS } = require("../cbInstance");
 
 
 function callback(info, data,res) {
   console.log('info: '+ info +' - data: ' + JSON.stringify(data));
-  // switch (info) {       
-  //   case 'REGISTER_SUCCESS':
-  //     api = { 
-  //       status: 0,
-  //       error: {},
-  //       user:data
-  //     };
-  //     return res.status(200).json(api);
-  // }
+  switch (info) {       
+    case SEND_TOKEN_SUCCESS: 
+    {
+      let api = { status: 0 };
+      return res.status(200).json(api);
+    }
+  }
 }
 
 

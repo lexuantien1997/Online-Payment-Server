@@ -63,7 +63,7 @@ const addNewVerifyData = (phone, request_id, expired, callback) => {
 }
 
 const updateVerifyData = (phone, request_id, expired, callback, uid) => {
-  let verify = firebase.getDatabase().ref().child("verify");
+  let verify = firebase.getDatabase().ref().child("verify/uid");
   verify.update({
     phone,
     request_id,
@@ -97,7 +97,8 @@ const addNewUserData = (name,phone,password,requestId,callback) => {
     memberAt: Date.now(),
     isFirstTime: true,
     birthday: Date.now(),
-    securityPass: ""
+    securityPass: "",
+    nextResetPasswordSend: Date.now() + 3600000 // can send reset password about 1h later
   }, error => {
     if(error) callback(ADD_USER_DATA_ERROR,error)
     else {
@@ -120,14 +121,14 @@ const cancelVerificationRequest = (prevRequestID, callback) => new Promise((reso
   });
 })
 
-const sendToken = (phone,callback,verifyData) => {
+const sendToken = (phone,callback,verifyData,uid) => {
   console.log(verifyData);
   nexmo.verify.request({number:phone, brand: 'Online payment'}, (err, result) => {
     if(err) callback(NEXMO_SERVER_ERROR,err);
     else { 
       if(result.status == '0') { // success        
         console.log('Start send token for number: ' + phone + " whith request id: " + result.request_id);
-        if(verifyData != null) updateVerifyData(phone,result.request_id,Date.now(),callback);
+        if(verifyData != null) updateVerifyData(phone,result.request_id,Date.now(),callback,uid);
         else addNewVerifyData(phone, result.request_id,Date.now(), callback);
       } else  callback(SEND_TOKEN_ERROR, {message: result.error_text, requestId: result.request_id});         
     }
@@ -153,12 +154,13 @@ const beforeSendToken = (phone, callback) => {
           if(val) {
             let uid = Object.keys(val)[0]; // stupid code
             if(Date.now() - val[uid].expired > process.env.EXPIRED) {
+              sendToken(phone,callback,val,uid);
               // remove pre request:
-              cancelVerificationRequest(val[uid].request_id,callback)
-                .then( () => sendToken(phone,callback,val))
-                .catch(err => callback(CANCEL_VERIFICATION_ERROR,err));
+              // cancelVerificationRequest(val[uid].request_id,callback)
+              //   .then( () => sendToken(phone,callback,val,uid))
+              //   .catch(err => callback(CANCEL_VERIFICATION_ERROR,err));
             }           
-          } else sendToken(phone,callback,null);
+          } else sendToken(phone,callback,null,null);
         });
       }
     })
