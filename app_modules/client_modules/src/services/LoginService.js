@@ -1,7 +1,7 @@
 const firebase = require("../../../../configs/firebase.config");
 
 const checkPhoneExist = (phone) => new Promise((resolve,reject) => {
-  let userRef = firebase.getDatabase().ref().child("user");
+  let userRef = firebase.getDatabase().ref("user");
   userRef
     .orderByChild("phone")
     .equalTo(phone)
@@ -9,9 +9,10 @@ const checkPhoneExist = (phone) => new Promise((resolve,reject) => {
 })
 
 const checkEmailExist = (email) => new Promise((resolve,reject) => {
+  let userRef = firebase.getDatabase().ref("user");
   userRef
     .orderByChild("email")
-    .equalTo(email)
+    .equalTo(phone)
     .once("value", (data) => resolve(data.val()));
 })
 

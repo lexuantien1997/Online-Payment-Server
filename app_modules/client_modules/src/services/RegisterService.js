@@ -25,7 +25,7 @@ const nexmo = new Nexmo({
 });
 
 const checkPhoneExist = (phone) => new Promise((resolve,reject) => {
-  let userRef = firebase.getDatabase().ref().child("user");
+  let userRef = firebase.getDatabase().ref("user");
   userRef
     .orderByChild("phone")
     .equalTo(phone)
@@ -33,14 +33,14 @@ const checkPhoneExist = (phone) => new Promise((resolve,reject) => {
 })
 
 const checkEmailExist = (email) => new Promise((resolve,reject) => {
-  firebase.getAuth()
-    .getUserByEmail(email)
-    .then(userRecord => userRecord != null ? resolve(true) : resolve(false))
-    .catch(err => reject())
+  // firebase.getAuth()
+  //   .getUserByEmail(email)
+  //   .then(userRecord => userRecord != null ? resolve(true) : resolve(false))
+  //   .catch(err => reject())
 })
 
 const checkPhoneVerifyExist = (phone) => new Promise((resolve,reject) => {
-  let verifyRef = firebase.getDatabase().ref().child("verify");
+  let verifyRef = firebase.getDatabase().ref("verify");
   verifyRef
     .orderByChild("phone")
     .equalTo(phone)
@@ -48,7 +48,7 @@ const checkPhoneVerifyExist = (phone) => new Promise((resolve,reject) => {
 })
 
 const addNewVerifyData = (phone, request_id, expired, callback) => {
-  let verify = firebase.getDatabase().ref().child("verify");
+  let verify = firebase.getDatabase().ref("verify");
   verify.push({
     phone,
     request_id,
@@ -63,7 +63,7 @@ const addNewVerifyData = (phone, request_id, expired, callback) => {
 }
 
 const updateVerifyData = (phone, request_id, expired, callback, uid) => {
-  let verify = firebase.getDatabase().ref().child("verify/uid");
+  let verify = firebase.getDatabase().ref("verify/" + uid);
   verify.update({
     phone,
     request_id,
@@ -80,7 +80,7 @@ const updateVerifyData = (phone, request_id, expired, callback, uid) => {
 
 const addNewUserData = (name,phone,password,requestId,callback) => {
   password = passwordCrypt.hashPassword(password);
-  let user = firebase.getDatabase().ref().child("user");
+  let user = firebase.getDatabase().ref("user");
   user.push({
     phone,
     name,
@@ -128,8 +128,8 @@ const sendToken = (phone,callback,verifyData,uid) => {
     else { 
       if(result.status == '0') { // success        
         console.log('Start send token for number: ' + phone + " whith request id: " + result.request_id);
-        if(verifyData != null) updateVerifyData(phone,result.request_id,Date.now(),callback,uid);
-        else addNewVerifyData(phone, result.request_id,Date.now(), callback);
+        if(verifyData != null) updateVerifyData(phone,result.request_id,Date.now() + 300000,callback,uid);
+        else addNewVerifyData(phone, result.request_id,Date.now() + 300000, callback);
       } else  callback(SEND_TOKEN_ERROR, {message: result.error_text, requestId: result.request_id});         
     }
   });
@@ -147,8 +147,8 @@ const beforeSendToken = (phone, callback) => {
       if(status != null) {
         callback(PHONE_REGISTERED);
       } else { // not register or last time not update code
-        let verifyRef = firebase.getDatabase().ref().child("verify");
-        verifyRef.orderByChild("phone").equalTo(phone).on("value", data => {
+        let verifyRef = firebase.getDatabase().ref("verify");
+        verifyRef.orderByChild("phone").equalTo(phone).once("value", data => {
           // console.log(data.val());
           let val = data.val();
           if(val) {

@@ -3,7 +3,7 @@ const { hashPassword } = require("../utils/password.crypt");
 const { UPDATE_USER_DATA_ERROR, UPDATE_USER_DATA_SUCCESS } = require("../cbInstance");
 
 const updateUserData = (securityPass,  uid, callback) => {
-  let userRef = firebase.getDatabase().ref().child("user/" + uid);
+  let userRef = firebase.getDatabase().ref("user/" + uid);
   userRef.update({ securityPass, isFirstTime: false }, error => {
     if(error) callback(UPDATE_USER_DATA_ERROR,error)
     else callback(UPDATE_USER_DATA_SUCCESS);

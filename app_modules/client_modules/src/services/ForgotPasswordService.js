@@ -7,7 +7,8 @@ const {
   SEND_FORGOT_PASSWORD_SUCCESS ,
   EMAILPHONE_NOT_EXIST,
   PHONE_NOT_VERIFY,
-  PHONE_NOT_EXIST
+  PHONE_NOT_EXIST,
+  SEND_FORGOT_PASSWORD_AFTER_1H
 } = require("../cbInstance");
 const passwordCrypt =  require('../utils/password.crypt');
 const Nexmo = require('nexmo');
@@ -29,7 +30,7 @@ function safeRandomBytes(length) {
 }
 
 const updateUserData = (newPass,  uid, callback) => {
-  let userRef = firebase.getDatabase().ref().child("user/" + uid);
+  let userRef = firebase.getDatabase().ref("user/" + uid);
   userRef.update({ password: newPass, nextResetPasswordSend: Date.now()  + 3600000 }, error => { // can send next 1hours
     if(error) callback(UPDATE_USER_DATA_ERROR,error);
     else {
@@ -58,7 +59,7 @@ const sendForgotPasswordbyPhone = (uid,phone,callback) => {
 
 const checkPhoneVerify = (phone) => new Promise( (resolve,reject) => {
   console.log(phone);
-  let userRef = firebase.getDatabase().ref().child("user");
+  let userRef = firebase.getDatabase().ref("user");
   userRef.orderByChild("phone").equalTo(phone).once("value", snapshot => {
     resolve(snapshot.val());
   });
@@ -69,9 +70,13 @@ const SendForgotPassword = (type, emailOrPhone,callback) => {
     checkPhoneVerify("+84" + emailOrPhone*1).then(data => {
       if(data != null) {
         let uid = Object.keys(data)[0];
-        if(data[uid].verified && Date.now() - data[uid].nextResetPasswordSend > 3600000 ) { // 1hours
-          console.log("send forgot pass for uid: " + uid);
-          sendForgotPasswordbyPhone(uid,"+84" + emailOrPhone*1,callback);
+        if(data[uid].verified) { // 1hours
+          if( Date.now() - data[uid].nextResetPasswordSend > 3600000) {
+            console.log("send forgot pass for uid: " + uid);
+            sendForgotPasswordbyPhone(uid,"+84" + emailOrPhone*1,callback);
+          } else {
+            callback(SEND_FORGOT_PASSWORD_AFTER_1H, data[uid].nextResetPasswordSend);
+          }         
         } else { // phone hasn't been verified yet
           callback(PHONE_NOT_VERIFY);
         }
