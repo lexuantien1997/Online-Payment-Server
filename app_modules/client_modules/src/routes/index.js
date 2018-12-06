@@ -1,5 +1,6 @@
 const express = require('express');
 const loginController = require('../controllers/login.controller');
+const logoutController = require('../controllers/logout.controller');
 const registerController = require('../controllers/register.controller');
 const registerPinController = require('../controllers/register.pin');
 const verifyRegisterController = require('../controllers/verify-register.controller');
@@ -10,6 +11,11 @@ const router = express.Router();
 router.post('/login', (req,res) => { // fixed  
   console.log("Tracking: User " + req.body.emailOrPhone + " start login");
   loginController(req, res);
+});
+
+router.post('/logout', (req,res) => { // fixed  
+  console.log("Tracking: User " + req.body.id + " want to logout");
+  logoutController(req, res);
 });
 
 router.post('/register', (req,res) => {  // fixed
