@@ -6,7 +6,7 @@ const updateUserData = (securityPass,  uid, callback) => {
   let userRef = firebase.getDatabase().ref("user/" + uid);
   userRef.update({ securityPass, isFirstTime: false }, error => {
     if(error) callback(UPDATE_USER_DATA_ERROR,error)
-    else callback(UPDATE_USER_DATA_SUCCESS);
+    else callback(UPDATE_USER_DATA_SUCCESS,uid);
   });
 }
 

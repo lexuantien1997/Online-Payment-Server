@@ -7,7 +7,7 @@ const verifyRegisterController = require('../controllers/verify-register.control
 const forgotPassController = require('../controllers/forgot-password.controller');
 const updateInformationUser = require('../controllers/update-information-user.controller');
 const router = express.Router();
-
+const onlineController = require("../controllers/online.controller");
 router.post('/login', (req,res) => { // fixed  
   console.log("Tracking: User " + req.body.emailOrPhone + " start login");
   loginController(req, res);
@@ -16,6 +16,11 @@ router.post('/login', (req,res) => { // fixed
 router.post('/logout', (req,res) => { // fixed  
   console.log("Tracking: User " + req.body.id + " want to logout");
   logoutController(req, res);
+});
+
+router.post('/online', (req,res) => { // fixed  
+  console.log("Tracking: User " + req.body.id + " is online");
+  onlineController(req,res);
 });
 
 router.post('/register', (req,res) => {  // fixed

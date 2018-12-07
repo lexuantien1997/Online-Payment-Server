@@ -34,7 +34,7 @@ const login = (_user,password,type,res) => {
       console.log(1)
       api.status = 0;
       let { name, phone, money, gender, memberAt, address, email, birthday, isFirstTime,avatar,typeMoney } = _user[uid];
-      api.user = {id: uid, name,phone,money, gender,memberAt,address,email,birthday,isFirstTime,avatar,typeMoney} ;  
+      api.user = {id: uid, name,phone,money, gender,memberAt,address,email,birthday,isFirstTime,avatar,typeMoney,online: true} ;  
       api.errors = {};
       console.log("Tracking: " + uid + " _ " + phone + " login successfully");
 
