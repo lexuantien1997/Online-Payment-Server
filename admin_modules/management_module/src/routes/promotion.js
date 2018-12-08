@@ -10,12 +10,9 @@ router.get("/listPromotion", (req, res) => {
     // });
     var ref = firebase.getDatabase().ref("promotion");
 
-    ref.on("value", function (snapshot) {
+    ref.once("value", function (snapshot) {
         data=[]
         snapshot.forEach(function (childSnapshot) {
-            // var childData = childSnapshot.val();
-            // var id=childData.id;
-            
             data.push(childSnapshot.val());
         });
         console.log(data);
@@ -45,7 +42,6 @@ router.post("/init", (req, res) => {
     let imageLink = "null";
     let idPrmotion = "Promotion";
     promise1(idPrmotion).then(function (value) {
-        console.log((value.url));
         imageLink = value.url;
         require("fs").unlinkSync("out.png")
         var value = "";
@@ -66,8 +62,8 @@ router.post("/init", (req, res) => {
         let user = firebase.getDatabase().ref().child("promotion");
         user.push({
             ID_PRMOTION: idPrmotion,
-            Start_date: promotion.beginTime + " " + promotion.beginDate,
-            End_date: promotion.endTime + " " + promotion.endDate,
+            Start_date: new Date(promotion.beginDate+"T"+promotion.beginTime+":00").getTime()/1000,
+            End_date: new Date(promotion.endDate+"T"+promotion.endTime+":00").getTime()/1000,
             Image: imageLink,
             Description: promotion.description,
             Query: query,
@@ -78,5 +74,7 @@ router.post("/init", (req, res) => {
         });
     });
 });
+
+
 // Config express route in ver 4.x
 module.exports = router;

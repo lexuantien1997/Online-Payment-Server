@@ -22,7 +22,7 @@ router.get("/user/:key", (req, res) => {
     // });
     var ref = firebase.getDatabase().ref("user");
 
-    ref.on("value", function (snapshot) {
+    ref.once("value", function (snapshot) {
         data=[]
         snapshot.forEach(function (childSnapshot) {
             // var childData = childSnapshot.val();

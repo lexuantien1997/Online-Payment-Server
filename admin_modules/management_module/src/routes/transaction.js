@@ -5,17 +5,17 @@ const Transaction = require('../../../../database/admin/transaction');
 const firebase = require("../../../../configs/firebase.config");
 
 router.get("/listTransaction", (req, res) => {
-    var ref = firebase.getDatabase().ref("transacion");
+    var ref = firebase.getDatabase().ref("transaction");
 
-    ref.on("value", function (snapshot) {
-        data=[]
+    ref.once("value", function (snapshot) {
+        data=[];
         snapshot.forEach(function (childSnapshot) {
             // var childData = childSnapshot.val();
             // var id=childData.id;
-            
-            data.push(childSnapshot.val());
+            var temp=childSnapshot.val();
+            temp.TranID=childSnapshot.key.substring(3);
+            data.push(temp);
         });
-        console.log(data);
         res.json(data);
     });
 });

@@ -3,70 +3,87 @@ const router = express.Router();
 const User = require('../../../../database/app/user');
 const axios = require('axios');
 const firebase = require("../../../../configs/firebase.config");
-
+const checkPromotion =require('./promotion');
 router.post("/", (req, res) => {
     // Save transaction
-    let tranID = "TRANS0001";
-    var { phone,money } = req.body;
-    if (phone == undefined || money == undefined )
-        res.send("Something wrong:\n"
-            + ((phone == undefined) ? "Name: undefined" : ("Name: " + phone)) + "\n"
-            + ((money == undefined) ? "Money: undefined" : ("Money: " + money))
-        );
-    else {
-        let recharge = firebase.getDatabase().ref().child("recharge");
-        recharge.push({
-            Name: phone,
-            Phone: phone,
-            TranID: tranID,
-            Target: phone,
-            Money: money,
-            Description: "nothing",
-            DateTrans: new Date(),
-            Type: 3,
-            FeeTrans: 0
-        }, error => {
-            console.log(error);
-        });
-    }
+    let tranID = "TRANS";
+    var { phone, money, name } = req.body;
+    let user = firebase.getDatabase().ref("user");
+    user.orderByChild("phone").equalTo(phone).once("value", data => {
+        let val = data.val();
+        if (val) {
+            let uid = Object.keys(val)[0];
+            val = val[uid];
+            checkPromotion(val, money).then(promotionVar => {
+                // Save transaction   
+                if (phone == undefined || money == undefined)
+                    res.send("Something wrong:\n"
+                        + ((phone == undefined) ? "Name: undefined" : ("Name: " + phone)) + "\n"
+                        + ((money == undefined) ? "Money: undefined" : ("Money: " + money))
+                    );
+                else {
+                    let transaction = firebase.getDatabase().ref().child("transaction");
+                    transaction.push({
+                        Name: name,
+                        Phone: phone,
+                        TranID: tranID,
+                        Target: phone,
+                        Money: money,
+                        Description: "nothing",
+                        DateTrans: (new Date()).toLocaleDateString()+" "+(new Date()).toLocaleTimeString(),
+                        Type: 3,
+                        FeeTrans: promotionVar["fee"],
+                        MoneyPromotion: promotionVar["moneypromotion"]
+                    }, error => {
+                        if (error)
+                            console.log(error);
 
-
-    // Handle transaction for clients
-
-    let user = User.find({ phone: phone });
-    let newMoney = user.money + parseInt(money, 10);
-
-    User.findOneAndUpdate({ phone: phone },
-        { $set: { money: newMoney } }, { new: true }, (err, doc) => {
-            if (err) {
-                console.log("Something wrong when updating data!");
-            }
-
-            console.log(doc);
-        });
-    //SSE
-    axios.post('http://localhost:8080/sendMessage', {
-        name: phone,
-        type: "1",
-        money: money
-    })
-        .then(function (response) {
-            console.log("sucess");
-        })
-        .catch(function (error) {
-            console.log("error");
-        });
-
-    // response for apps
-    const result = {
-        status: 0,
-        money: 0,
-        DateTrans: new Date(),
-        TranID: tranID
-    }
-    result.status = 1;
-    result.money = money;
-    res.json(result);
+                    }).then((snap) => {
+                        let result = {
+                            Name: name,
+                            Phone: phone,
+                            TranID: snap.key,
+                            Target: phone,
+                            Money: money,
+                            Description: "nothing",
+                            DateTrans: (new Date()).toLocaleDateString()+" "+(new Date()).toLocaleTimeString(),
+                            Type: 3,
+                            FeeTrans: promotionVar["fee"],
+                            MoneyPromotion: promotionVar["moneypromotion"]
+                        };
+                        console.log("_________________________________")
+                        console.log("New transaction is created: " + JSON.stringify(result));
+                        moneynew = promotionVar["money"];
+                        // update money user
+                        let userRef = firebase.getDatabase().ref("user/" + uid);
+                        userRef.update({ money:moneynew }, error => {
+                            if (error) {
+                                res.status(403).json(error);
+                            }
+                            else {
+                                let result = {
+                                    status: 0,
+                                    money: money,
+                                    DateTrans: (new Date()).toLocaleDateString()+" "+(new Date()).toLocaleTimeString(),
+                                    TranID: snap.key.substring(3),
+                                    Fee:promotionVar["fee"],
+                                    MoneyPromotion: promotionVar["moneypromotion"]
+                                }
+                                result.status = 0;
+                                result.money = money;
+                                console.log("_________________________________")
+                                console.log("New recharge transaction is created; " + JSON.stringify(result));
+                                res.status(200).json(result);
+                            }
+                        });
+                    });
+                }
+            });
+        }
+        else {
+            res.status(403).json(error);
+        }
+    });
 });
 
 // Config express route in ver 4.x
