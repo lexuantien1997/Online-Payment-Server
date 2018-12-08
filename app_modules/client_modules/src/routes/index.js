@@ -8,6 +8,7 @@ const forgotPassController = require('../controllers/forgot-password.controller'
 const updateInformationUser = require('../controllers/update-information-user.controller');
 const router = express.Router();
 const onlineController = require("../controllers/online.controller");
+const offlineController = require("../controllers/offline.controller");
 router.post('/login', (req,res) => { // fixed  
   console.log("Tracking: User " + req.body.emailOrPhone + " start login");
   loginController(req, res);
@@ -21,6 +22,11 @@ router.post('/logout', (req,res) => { // fixed
 router.post('/online', (req,res) => { // fixed  
   console.log("Tracking: User " + req.body.id + " is online");
   onlineController(req,res);
+});
+
+router.post('/offline', (req,res) => { // fixed  
+  console.log("Tracking: User " + req.body.id + " is online");
+  offlineController(req,res);
 });
 
 router.post('/register', (req,res) => {  // fixed
