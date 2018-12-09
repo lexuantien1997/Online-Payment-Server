@@ -1,8 +1,9 @@
 const firebase = require("../../../../configs/firebase.config");
 
-const checkPromotion = (val,money)  => new Promise((resolve,reject) =>  { 
-   
-    firebase.getDatabase().ref("variableRule/recharge").once("value", snapshot => {
+const checkPromotion = (val,money,type)  => new Promise((resolve,reject) =>  { 
+   if(type==1) rule="utu";
+   if(type==3) rule="recharge"
+    firebase.getDatabase().ref("variableRule/"+rule).once("value", snapshot => {
         let fee=0;
         snapshot.forEach(function (childSnapshot) {
             // fee=childSnapshot.val()["fee"];
@@ -10,12 +11,13 @@ const checkPromotion = (val,money)  => new Promise((resolve,reject) =>  {
                 fee=childSnapshot.val()
             }
         });
+        
         var orginDate = new Date().getTime() / 1000;
         firebase.getDatabase().ref("promotion").orderByChild("Start_date").endAt(orginDate)
         .once("value", snapshot => {
             snapshot.forEach(function (childSnapshot) {
                 let valPro=childSnapshot.val();
-                if(orginDate<parseFloat(valPro["End_date"])){
+                if(orginDate<parseFloat(valPro["End_date"])&&type==valPro["Type_Transaction"]){
                     let birthday=parseFloat(val["birthday"]);
                     var date = new Date(birthday);
                     let age=(new Date()).getFullYear()-date.getFullYear()
@@ -61,6 +63,14 @@ const checkPromotion = (val,money)  => new Promise((resolve,reject) =>  {
                         fee:fee
                     });
                     
+                }
+                else{
+                    resolve( {
+                        is:false,
+                        money:money,
+                        moneypromotion:0,
+                        fee:fee
+                    });
                 }
             });
         });

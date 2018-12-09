@@ -14,7 +14,7 @@ router.post("/", (req, res) => {
         if (val) {
             let uid = Object.keys(val)[0];
             val = val[uid];
-            checkPromotion(val, money).then(promotionVar => {
+            checkPromotion(val, money,3).then(promotionVar => {
                 // Save transaction   
                 if (phone == undefined || money == undefined)
                     res.send("Something wrong:\n"
