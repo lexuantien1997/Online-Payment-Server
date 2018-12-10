@@ -22,17 +22,18 @@ router.get("/user/:key", (req, res) => {
     // });
     var ref = firebase.getDatabase().ref("user");
 
-    ref.once("value", function (snapshot) {
+    ref.orderByChild("phone").once("value", function (snapshot) {
         data=[]
         snapshot.forEach(function (childSnapshot) {
             // var childData = childSnapshot.val();
             // var id=childData.id;
-            childData=childSnapshot.val();
-            if(paragraph.match(regex)){
-                data.push(childSnapshot.val());
-            }
+            var re = new RegExp("(.*"+key+".*)$");
+            if(re.test(childSnapshot.val()["phone"].substring(3)))
+                data.push({
+                            name: childSnapshot.val()["name"],
+                            phone:childSnapshot.val()["phone"],
+                            avatar: childSnapshot.val()["avatar"]});
         });
-        console.log(data);
         res.json(data);
     });
 });

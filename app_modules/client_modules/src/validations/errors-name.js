@@ -18,6 +18,7 @@ const CONFIRM_PASSWORD_EMPTY = 'confirm password is require';
 const PHONE_EMPTY = 'phone is required';
 const PHONE_INVALID = 'phone is invalid';
 const PHONE_NUMBER_NOTSEND = 'phone number not send';
+const PHONE_NOT_VERIFY_YET = "phone number not verify";
 
 const VERIFY_CODE_EMPTY = 'verify code is required';
 
@@ -63,7 +64,8 @@ module.exports = {
     PHONE_INVALID,
     PHONE_EMPTY,
     PHONE_NUMBER_NOTSEND,
-
+    PHONE_NOT_VERIFY_YET,
+    
     USERNAME_EXIST,
     EMAIL_EXIST,
     PHONE_EXIST,

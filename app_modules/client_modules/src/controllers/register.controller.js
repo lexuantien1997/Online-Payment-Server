@@ -1,6 +1,5 @@
 const registerValidate = require('../validations/register.validation');
 const firebase = require("../../../../configs/firebase.config");
-// const registerService = require('../services/register.service');
 const registerService = require('../services/RegisterService');
 const User = require('../../../../database/app/user');
 const {PHONE_NUMBER_NOTSEND} = require('../validations/errors-name');
@@ -52,5 +51,5 @@ module.exports =  (req,res) => {
   req.body.phone = "+84" + req.body.phone;
   console.log(req.body);
 	// Check user name / phone is used or not by access database
-  registerService.registerUser(req.body, (info, data) => callback(info,data));
+  registerService.registerUser(req.body, (info, data) => callback(info,data,res));
 }

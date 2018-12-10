@@ -2,85 +2,137 @@ const express = require('express');
 const router = express.Router();
 const Transaction = require('../../../../database/admin/transaction');
 const firebase = require("../../../../configs/firebase.config");
+const checkPromotion = require('./promotion');
 
 //const transaction = require('transaction_module');
 router.post("/", (req, res) => {
-    let tranID = "TRANS0001";
+    let tranID = "TRANS";
     var { Name, Target, Money, Description, Phone } = req.body;
-    if (Name == undefined || Target == undefined || Money == undefined || Description == undefined)
-        res.send("Something wrong:\n"
-            + ((Name == undefined) ? "Name: undefined" : ("Name: " + Name)) + "\n"
-            + ((Target == undefined) ? "Target: undefined" : ("Target: " + Target)) + "\n"
-            + ((Money == undefined) ? "Money: undefined" : ("Money: " + Money)) + "\n"
-            + ((Description == undefined) ? "Description: undefined" : ("Description: " + Description)) + "\n"
-            //+((DateGet==undefined)?"DateGet: undefined":("DateGet: "+DateGet))+"\n"
-        );
-    else {
-        let transaction = firebase.getDatabase().ref().child("transaction");
-        transaction.push({
-            Name: Name,
-            TranID:tranID,
-            Target: Target,
-            Money: Money,
-            Description: Description,
-            DateTrans: new Date(),
-            Type: 2,
-            FeeTrans: 0
-        }, error => {
-            console.log(error);
-        });
-    }
+    let user = firebase.getDatabase().ref("user");
+    user.orderByChild("phone").equalTo(Phone).once("value", data => {
+        let val = data.val();
+        if (val) {
+            let uid = Object.keys(val)[0];
+            val = val[uid];
+            if ((parseFloat(val["money"]) - parseFloat(Money) - 20000) > 0) {
+                checkPromotion(val, Money,1).then(promotionVar => {
+                    if (Name == undefined || Target == undefined || Money == undefined || Description == undefined)
+                        res.send("Something wrong:\n"
+                            + ((Name == undefined) ? "Name: undefined" : ("Name: " + Name)) + "\n"
+                            + ((Target == undefined) ? "Target: undefined" : ("Target: " + Target)) + "\n"
+                            + ((Money == undefined) ? "Money: undefined" : ("Money: " + Money)) + "\n"
+                            + ((Description == undefined) ? "Description: undefined" : ("Description: " + Description)) + "\n"
+                            //+((DateGet==undefined)?"DateGet: undefined":("DateGet: "+DateGet))+"\n"
+                        );
+                    else {
+                        let transaction = firebase.getDatabase().ref().child("transaction");
+                        transaction.push({
+                            Name: Name,
+                            Phone: Phone,
+                            TranID: tranID,
+                            Target: Target,
+                            Money: Money,
+                            Description: Description,
+                            DateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
+                            Type: 3,
+                            FeeTrans: promotionVar["fee"],
+                            MoneyPromotion: promotionVar["moneypromotion"]
+                        }, error => {
+                            console.log(error);
+                        }).then((snap) => {
+                            let result = {
+                                Name: Name,
+                                Phone: Phone,
+                                TranID: snap.key,
+                                Target: Target,
+                                Money: Money,
+                                Description: Description,
+                                DateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
+                                Type: 3,
+                                FeeTrans: promotionVar["fee"],
+                                MoneyPromotion: promotionVar["moneypromotion"]
+                            };
+                            console.log("_________________________________")
+                            console.log("New transaction is created: " + JSON.stringify(result));
 
-    // Handle transaction for clients
+                            // update user
+                            let userRef = firebase.getDatabase().ref("user/" + uid);
+                            userRef.update({ money: (parseFloat(val["money"]) - parseFloat(Money)-parseFloat(promotionVar["fee"])) }, error => {
+                                if (error) {
+                                    res.status(403).json(error);
+                                }
+                                else {
+                                    user.orderByChild("phone").equalTo(Target).once("value", dataT => {
+                                       
+                                        let valT = dataT.val();
+                                        if (valT) {
+                                            let uidT = Object.keys(valT)[0];
+                                            valT = valT[uidT];
+                                            let userRefT = firebase.getDatabase().ref("user/" + uidT);
+                                            let newmoney = parseFloat(promotionVar["money"]) + parseFloat(valT["money"]);
+                                            console.log("new monye: "+newmoney);
+                                            userRefT.update({ money: newmoney }, error => {
+                                                if (error) {
+                                                    res.status(403).json(error);
+                                                }
+                                                else {
+                                                    let result = {
+                                                        status: 0,
+                                                        money: Money,
+                                                        DateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
+                                                        Target: valT["name"],
+                                                        TranID: snap.key.substring(3),
+                                                        Fee: promotionVar["fee"],
+                                                        MoneyPromotion: promotionVar["moneypromotion"]
+                                                    }
+                                                    result.status = 0;
+                                                    result.money = Money;
+                                                    console.log("_________________________________")
+                                                    console.log("Transfer User; " + JSON.stringify(result));
 
-    let user = User.find({ phone: Target });
-    let newMoney = user.money - parseInt(Money, 10);
-
-    if (newMoney > 0) {
-        User.findOneAndUpdate({ phone: Target },
-            { $set: { money: newMoney } }, { new: true }, (err, doc) => {
-                if (err) {
-                    console.log("Something wrong when updating data!");
+                                                    res.status(200).json(result);
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            const result = {
+                                                // nguoi nhan khong ton tai
+                                                status: -2,
+                                                DateTrans: new Date(),
+                                                TranID: "00000"
+                                            }
+                                            console.log("ERROR: " + JSON.stringify(result));
+                                            res.status(403).json(result);
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });
+            }
+            else {
+                const result = {
+                    // khong du so du
+                    status: -1,
+                    DateTrans: new Date(),
+                    TranID: "00000"
                 }
-
-                console.log(doc);
-            });
-
-        let target = target.find({ phone: Target });
-        newMoney = target.money + parseInt(Money, 10);
-
-        User.findOneAndUpdate({ phone: Target },
-            { $set: { money: newMoney } }, { new: true }, (err, doc) => {
-                if (err) {
-                    console.log("Something wrong when updating data!");
-                }
-
-                console.log(doc);
-            });
-
-        const result = {
-            status: 0,
-            DateTrans: new Date(),
-            TranID: tranID
+                console.log("ERROR: " + JSON.stringify(result));
+                res.status(403).json(result);
+            }
         }
-        var { phone, money } = req.body;
-        result.status = 1;
-        result.money = money;
-        res.status(200).json(result);
-    }
-    else
-    {
-        const result = {
-            status: 0,
-            DateTrans: new Date(),
-            TranID: tranID
+        else {
+            const result = {
+                // error network
+                status: 0,
+                DateTrans: new Date(),
+                TranID: "00000"
+            }
+            console.log("ERROR: " + JSON.stringify(result));
+            res.status(403).json(result);
         }
-        var { phone, money } = req.body;
-        result.status = 0;
-        result.money = 0;
-        res.status(200).json(result);
-    }
-
+    });
 
 });
 
