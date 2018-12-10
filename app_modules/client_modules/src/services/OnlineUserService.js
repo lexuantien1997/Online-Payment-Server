@@ -9,22 +9,28 @@ const AddOnlineUser = (uid,emailOrPhone,deviceInfo,callback) => {
   });
 } 
 
-const RemoveOnlineUser = (uid,callback) => {
+const RemoveOnlineUser = (uid,callback) => new Promise((resolve,reject) => {
   let userRef = firebase.getDatabase().ref("online/" + uid);
   userRef.remove( error => {
     if(error) callback(REMOVE_USER_ONLINE_ERROR,error)
-    else callback(REMOVE_USER_ONLINE_SUCCESS);
+    else {
+      callback(REMOVE_USER_ONLINE_SUCCESS);
+      resolve();
+    }
   });
-} 
+}) 
 
 
-const RemoveOnlineTempUser = (uid,callback) => {
+const RemoveOnlineTempUser = (uid,callback) => new Promise((resolve,reject) => {
   let userRef = firebase.getDatabase().ref("online-temp/" + uid);
   userRef.remove( error => {
     if(error) callback(REMOVE_USER_ONLINE_ERROR,error)
-    else callback(REMOVE_USER_ONLINE_SUCCESS);
+    else {
+      callback(REMOVE_USER_ONLINE_SUCCESS);
+      resolve();
+    }
   });
-} 
+}) 
 
 const AddOnlineTempUser = (uid,phone,callback) => {
   let userRef = firebase.getDatabase().ref("online-temp/" + uid);
@@ -32,7 +38,7 @@ const AddOnlineTempUser = (uid,phone,callback) => {
     if(error) callback(UPDATE_USER_ONLINE_ERROR,error)
     else callback(UPDATE_USER_ONLINE_SUCCESS);
   });
-} 
+}
 
 const checkUSerOnline = (emailOrPhone) => new Promise((resolve,reject) => {
   let onlineRef = firebase.getDatabase().ref("online");
@@ -42,10 +48,23 @@ const checkUSerOnline = (emailOrPhone) => new Promise((resolve,reject) => {
     .once("value", (data) => resolve(data.val()));
 })
 
+const blockUSer = async (uid,callback) => {
+  RemoveOnlineUser(uid,callback).then(() => {
+    RemoveOnlineTempUser(uid,callback).then(() => {
+      let userRef = firebase.getDatabase().ref("user/" + uid);
+      userRef.update({ type: "BLOCKED" }, error => {
+        if(error) callback("BLOCK_FAIL",error)
+        else callback("BLOCK_SUCCESS");
+      });
+    })
+  })
+}
+
 module.exports = {
   AddOnlineUser,
   RemoveOnlineUser,
   checkUSerOnline,
   AddOnlineTempUser,
-  RemoveOnlineTempUser
+  RemoveOnlineTempUser,
+  blockUSer
 }
