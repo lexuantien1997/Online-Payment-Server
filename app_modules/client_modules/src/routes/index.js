@@ -9,10 +9,18 @@ const updateInformationUser = require('../controllers/update-information-user.co
 const router = express.Router();
 const onlineController = require("../controllers/online.controller");
 const offlineController = require("../controllers/offline.controller");
+const blockController = require("../controllers/block.controller");
+const { sendMessage } = require("../controllers/cloudMessaging.controller");
 router.post('/login', (req,res) => { // fixed  
   console.log("Tracking: User " + req.body.emailOrPhone + " start login");
   loginController(req, res);
 });
+
+router.post('/block', (req,res) => { // fixed  
+  console.log("Tracking: User " + req.body.id + " was blocked");
+  blockController(req,res);
+});
+
 
 router.post('/logout', (req,res) => { // fixed  
   console.log("Tracking: User " + req.body.id + " want to logout");
@@ -51,6 +59,13 @@ router.post('/forgot-password', (req,res) => { // fixed
 router.post('/update-information-user', (req,res) => {
   console.log("Tracking: User " + req.body.email + " start update information user");
   updateInformationUser(req,res);
+});
+
+router.post('/send-message', (req,res) => {
+  console.log("Tracking: send message to device with token: " + req.body.registerToken);
+  sendMessage(req.body.registerToken , {
+    type:"BLOCK"
+  });
 });
 
 // Config express route in ver 4.x

@@ -94,6 +94,7 @@ app.get('/update-firebase', (req, res) => {
     // });
   });
 
+
 app.get('/query-firebase', (req, res) => {
   console.log("query - firebase");
   let userRef = firebaseConfig.getDatabase().ref().child("users");

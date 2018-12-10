@@ -23,13 +23,19 @@ const login = (_user,password,emailOrPhone,deviceInfo,type,res) => {
 
   let uid = Object.keys(_user)[0];
   console.log(password);
-  if(type == "email" && user.emailVerify == false) {
+  if(_user[uid].type == "BLOCKED") {
+    api.status = 1;
+    api.errors.emailOrPhone = "YOU WAS BLOCKED";
+    api.user = {};
+    return res.status(200).json(api);   
+  }
+  if(type == "email" && _user[uid].emailVerify == false) {
     api.status = 1;
     api.errors.emailOrPhone = NOT_VERIFY_EMAIL;
     api.user = {};
     console.log("Tracking: " + uid + " _ " + phone + " not verify email");
     return res.status(200).json(api);   
-  } else if(type == "phone") {
+  } else if( (type == "email" && user.emailVerify) || type == "phone") {
     if(passwordCrypt.comparePassowrd(password,_user[uid].password)) { 
       console.log(1)
       api.status = 0;
