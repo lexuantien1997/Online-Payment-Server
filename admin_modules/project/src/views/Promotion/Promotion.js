@@ -259,25 +259,6 @@ class Promotion extends Component {
     const options = [];
     list.forEach(element => {
       for (let i = 0; i < element.length; i++) {
-        // options.push(<tr onChange={this.handleRowClick(i)} key={"row-data-" + i}>
-        //   <td>{element[i].ID_PRMOTION}</td>
-        //   <td>{element[i].Start_date}</td>
-        //   <td>{element[i].End_date}</td>
-        //   <td>
-        //     <Button block color="primary" >Edit = ( Delete => Add new)</Button>
-        //     <Button block color="primary">Delete</Button>
-        //   </td>
-        // </tr>
-        // )
-        // options.push(<tr key={"row-expanded-" + i}>
-        //   <td><img style={imagePreviewStyle} src ={element[i].Image} /></td>
-        //   <td>{element[i].Description}</td>
-        //   <td>
-        //     {element[i].Type_Transaction}
-        //   </td>
-        //   <td>{element[i].Query}</td>
-        // </tr>
-        // )
         const perItemRows = this.renderItem(element[i],i);
         options.push(perItemRows);
       }

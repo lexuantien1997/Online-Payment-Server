@@ -10,16 +10,7 @@ router.get("/user/:key", (req, res) => {
         listUser: []
     }
     console.log(key);
-    // User.find({ phone: { $regex: '.*' + key + '.*' } }).exec(function (err, users) {
-    //     for(var i=0; i < users.length; i++){
-    //         result.listUser.push({
-    //             name: users[i].name,
-    //             phone:users[i].phone,
-    //             avatar: users[i].avatar});
-    //       }
-    //     console.log(users);
-    //     res.status(200).json(result);
-    // });
+
     var ref = firebase.getDatabase().ref("user");
 
     ref.orderByChild("phone").once("value", function (snapshot) {
@@ -36,6 +27,20 @@ router.get("/user/:key", (req, res) => {
         });
         res.json(data);
     });
+});
+
+router.get("/loadTransaction/:phone", (req, res) => {
+    var phone  = req.params.phone;
+    var ref = firebase.getDatabase().ref("transaction");
+    console.log(phone);
+    ref.orderByChild("Phone").equalTo(phone).once("value", function (snapshot) {
+        data=[]
+        snapshot.forEach(function (childSnapshot) {
+            data.push(childSnapshot.val())
+        });
+        res.json(data);
+    });
+    // http://localhost:8080/transaction/search/loadTransaction/+84932311434
 });
 
 // Config express route in ver 4.x
