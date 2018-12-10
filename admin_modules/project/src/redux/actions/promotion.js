@@ -8,6 +8,7 @@ const loadPromotion = () => dispatch => {
             var object = {
                 ID_PRMOTION: response.data[i].ID_PRMOTION,
                 Start_date: response.data[i].Start_date,
+                End_date: response.data[i].End_date,
                 Image: response.data[i].Image,
                 Description: response.data[i].Description,
                 Query: response.data[i].Query,

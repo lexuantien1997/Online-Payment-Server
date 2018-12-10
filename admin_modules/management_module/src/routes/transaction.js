@@ -7,7 +7,7 @@ const firebase = require("../../../../configs/firebase.config");
 router.get("/listTransaction", (req, res) => {
     var ref = firebase.getDatabase().ref("transacion");
 
-    ref.on("value", function (snapshot) {
+    ref.once("value", function (snapshot) {
         data=[]
         snapshot.forEach(function (childSnapshot) {
             // var childData = childSnapshot.val();

@@ -28,7 +28,8 @@ class Promotion extends Component {
       imageUrl: null,
       promotionCon:false,
       messError:"",
-      isError:false
+      isError:false,
+      expandedRows : []
     };
 
   }
@@ -214,21 +215,71 @@ class Promotion extends Component {
     console.log( event.target.value);
     this.setState({endTime: event.target.value});
    }
+   handleRowClick(rowId) {
+    const currentExpandedRows = this.state.expandedRows;
+    const isRowCurrentlyExpanded = currentExpandedRows.includes(rowId);
+    
+    const newExpandedRows = isRowCurrentlyExpanded ? 
+  currentExpandedRows.filter(id => id !== rowId) : 
+  currentExpandedRows.concat(rowId);
+    
+    this.setState({expandedRows : newExpandedRows});
+}
+  renderItem(item, i) {
+    const clickCallback = () => this.handleRowClick(i);
+    const itemRows = [
+      <tr onClick={clickCallback} key={"row-data-" + i}>
+        <td>{item.ID_PRMOTION}</td>
+        <td>{item.Start_date}</td>
+        <td>{item.End_date}</td>
+        <td>
+          <Button block color="primary" >Edit = ( Delete => Add new)</Button>
+          <Button block color="primary">Delete</Button>
+        </td>
+      </tr>
+    ];
+
+    if (this.state.expandedRows.includes(i)) {
+      itemRows.push(
+        <tr key={"row-expanded-" + i}>
+          <td><img style={imagePreviewStyle} src={item.Image} /></td>
+          <td>{item.Description}</td>
+          <td>
+            {item.Type_Transaction}
+          </td>
+          <td>{item.Query}</td>
+        </tr>
+      );
+    }
+
+  return itemRows;    
+}
   render() {
     const list = this.props.promotion.listPromotion;
     const options = [];
     list.forEach(element => {
       for (let i = 0; i < element.length; i++) {
-        console.log(element[i]);
-        options.push(<tr>
-          <td>{element[i].ID_PRMOTION}</td>
-          <td>{element[i].Start_date}</td>
-          <td>{element[i].End_date}</td>
-          <td>
-            <Button block color="primary" >Edit = ( Delete => Add new)</Button>
-            <Button block color="primary">Delete</Button>
-          </td>
-        </tr>)
+        // options.push(<tr onChange={this.handleRowClick(i)} key={"row-data-" + i}>
+        //   <td>{element[i].ID_PRMOTION}</td>
+        //   <td>{element[i].Start_date}</td>
+        //   <td>{element[i].End_date}</td>
+        //   <td>
+        //     <Button block color="primary" >Edit = ( Delete => Add new)</Button>
+        //     <Button block color="primary">Delete</Button>
+        //   </td>
+        // </tr>
+        // )
+        // options.push(<tr key={"row-expanded-" + i}>
+        //   <td><img style={imagePreviewStyle} src ={element[i].Image} /></td>
+        //   <td>{element[i].Description}</td>
+        //   <td>
+        //     {element[i].Type_Transaction}
+        //   </td>
+        //   <td>{element[i].Query}</td>
+        // </tr>
+        // )
+        const perItemRows = this.renderItem(element[i],i);
+        options.push(perItemRows);
       }
     });
 
