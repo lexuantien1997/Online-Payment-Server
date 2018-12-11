@@ -7,9 +7,8 @@ const verifyRegisterController = require('../controllers/verify-register.control
 const forgotPassController = require('../controllers/forgot-password.controller');
 const updateInformationUser = require('../controllers/update-information-user.controller');
 const router = express.Router();
-const onlineController = require("../controllers/online.controller");
-const offlineController = require("../controllers/offline.controller");
 const blockController = require("../controllers/block.controller");
+const unblockController = require("../controllers/unblock.controller");
 const { sendMessage } = require("../controllers/cloudMessaging.controller");
 router.post('/login', (req,res) => { // fixed  
   console.log("Tracking: User " + req.body.emailOrPhone + " start login");
@@ -21,20 +20,16 @@ router.post('/block', (req,res) => { // fixed
   blockController(req,res);
 });
 
+router.post('/unblock', (req,res) => { // fixed  
+  console.log("Tracking: User " + req.body.id + " was un blocked");
+  unblockController(req,res);
+});
+
+
 
 router.post('/logout', (req,res) => { // fixed  
   console.log("Tracking: User " + req.body.id + " want to logout");
   logoutController(req, res);
-});
-
-router.post('/online', (req,res) => { // fixed  
-  console.log("Tracking: User " + req.body.id + " is online");
-  onlineController(req,res);
-});
-
-router.post('/offline', (req,res) => { // fixed  
-  console.log("Tracking: User " + req.body.id + " is online");
-  offlineController(req,res);
 });
 
 router.post('/register', (req,res) => {  // fixed

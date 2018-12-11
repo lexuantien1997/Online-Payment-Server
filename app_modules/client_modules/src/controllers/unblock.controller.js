@@ -1,10 +1,9 @@
-
-const { blockUSer } = require('../services/OnlineUserService');
+const { unBlockUSer } = require('../services/OnlineUserService');
 
 function callback(info, data,res) {
   console.log('info: '+ info +' - data: ' + JSON.stringify(data));
   switch (info) {       
-    case "BLOCK_SUCCESS": 
+    case "UNBLOCK_SUCCESS": 
     {
       let api = { status: 0 };
       return res.status(200).json(api);
@@ -14,5 +13,5 @@ function callback(info, data,res) {
 
 
 module.exports = (req,res) => {
-  blockUSer(req.body.id, (info,data) => callback(info,data,res));
+  unBlockUSer(req.body.id, (info,data) => callback(info,data,res));
 }

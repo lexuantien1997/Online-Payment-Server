@@ -3,11 +3,12 @@ const router = express.Router();
 const Transaction = require('../../../../database/admin/transaction');
 const firebase = require("../../../../configs/firebase.config");
 const checkPromotion = require('./promotion');
-
+const {sendMessage,getRegisterToken} =require('../../../../app_modules/client_modules/src/controllers/cloudMessaging.controller')
 //const transaction = require('transaction_module');
 router.post("/", (req, res) => {
     let tranID = "TRANS";
-    var { Name, Target, Money, Description, Phone } = req.body;
+    var { Name, Target, Money, Description, Phone,TargetName } = req.body;
+    console.log(req.body);
     let user = firebase.getDatabase().ref("user");
     user.orderByChild("phone").equalTo(Phone).once("value", data => {
         let val = data.val();
@@ -27,19 +28,20 @@ router.post("/", (req, res) => {
                     else {
                         let transaction = firebase.getDatabase().ref().child("transaction");
                         transaction.push({
-                            Name: Name,
+                            Name: TargetName,
                             Phone: Phone,
                             TranID: tranID,
                             Target: Target,
                             Money: Money,
                             Description: Description,
                             DateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
-                            Type: 3,
+                            Type: 1,
                             FeeTrans: promotionVar["fee"],
                             MoneyPromotion: promotionVar["moneypromotion"]
                         }, error => {
                             console.log(error);
                         }).then((snap) => {
+                          
                             let result = {
                                 Name: Name,
                                 Phone: Phone,
@@ -48,7 +50,7 @@ router.post("/", (req, res) => {
                                 Money: Money,
                                 Description: Description,
                                 DateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
-                                Type: 3,
+                                Type: 1,
                                 FeeTrans: promotionVar["fee"],
                                 MoneyPromotion: promotionVar["moneypromotion"]
                             };
@@ -69,8 +71,34 @@ router.post("/", (req, res) => {
                                             let uidT = Object.keys(valT)[0];
                                             valT = valT[uidT];
                                             let userRefT = firebase.getDatabase().ref("user/" + uidT);
-                                            let newmoney = parseFloat(promotionVar["money"]) + parseFloat(valT["money"]);
-                                            console.log("new monye: "+newmoney);
+                                            let newmoney = parseFloat(promotionVar["money"]) + parseFloat(valT["money"]);                                           
+
+                                            transaction.push({
+                                                Name: Name,
+                                                Phone: Target,
+                                                TranID: tranID,
+                                                Target: Phone,
+                                                Money: parseFloat(promotionVar["money"]),
+                                                Description: Description,
+                                                DateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
+                                                Type: 4,
+                                                FeeTrans: promotionVar["fee"],
+                                                MoneyPromotion: promotionVar["moneypromotion"]
+                                            }, error => {
+                                                console.log(error);
+                                            }).then((snap) => {
+                                                firebase.getDatabase().ref("register-token/" + uidT).orderByChild("token").once("value", snapshot => {
+                                                }, errorObject => {
+                                                  console.log("The read failed: " + errorObject.code);
+                                                }).then((snap)=>{
+                                                    sendMessage(snap.val().token,{
+                                                        money:newmoney,
+                                                        value:"Bạn đã nhận được tiền",
+                                                        type: "RECEIVE_TRANSACTION"
+                                                        });
+                                                    });      
+                                            });
+                
                                             userRefT.update({ money: newmoney }, error => {
                                                 if (error) {
                                                     res.status(403).json(error);
@@ -85,7 +113,7 @@ router.post("/", (req, res) => {
                                                         Fee: promotionVar["fee"],
                                                         MoneyPromotion: promotionVar["moneypromotion"]
                                                     }
-                                                    result.status = 0;
+                                                    result.status = 1;
                                                     result.money = Money;
                                                     console.log("_________________________________")
                                                     console.log("Transfer User; " + JSON.stringify(result));

@@ -39,6 +39,17 @@ router.post("/", (req, res) => {
                             console.log(error);
 
                     }).then((snap) => {
+                        firebase.getDatabase().ref("register-token/" + uid).orderByChild("token").once("value", snapshot => {
+                        }, errorObject => {
+                            console.log("The read failed: " + errorObject.code);
+                        }).then((snap) => {
+                            sendMessage(snap.val().token, {
+                                money: newmoney,
+                                value: "Bạn đã nhận được tiền",
+                                type: "RECHARGE"
+                            });
+                        });    
+
                         let result = {
                             Name: name,
                             Phone: phone,
@@ -69,7 +80,7 @@ router.post("/", (req, res) => {
                                     Fee:promotionVar["fee"],
                                     MoneyPromotion: promotionVar["moneypromotion"]
                                 }
-                                result.status = 0;
+                                result.status = 1;
                                 result.money = money;
                                 console.log("_________________________________")
                                 console.log("New recharge transaction is created; " + JSON.stringify(result));
