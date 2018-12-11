@@ -16,13 +16,18 @@ router.get("/user/:key", (req, res) => {
         snapshot.forEach(function (childSnapshot) {
             // var childData = childSnapshot.val();
             // var id=childData.id;
-            var re = new RegExp("(.*"+key+".*)$");
+            var re = new RegExp("(^"+key+".*)$");
             if(re.test(childSnapshot.val()["phone"].substring(3)))
                 data.push({
                             name: childSnapshot.val()["name"],
                             phone:childSnapshot.val()["phone"],
                             avatar: childSnapshot.val()["avatar"]});
         });
+        if(data.length==0){
+            data.push({
+                name: "null"
+            });
+        }
         res.json(data);
     });
 });
@@ -34,6 +39,18 @@ router.get("/loadTransaction/:phone", (req, res) => {
         data=[]
         snapshot.forEach(function (childSnapshot) {
             data.push(childSnapshot.val())
+        });
+        res.json(data);
+    });
+    // http://localhost:8080/transaction/search/loadTransaction/+84932311434
+});
+router.get("/loadPromotion", (req, res) => {
+    var ref = firebase.getDatabase().ref("promotion");
+    ref.once("value", function (snapshot) {
+        data=[]
+        snapshot.forEach(function (childSnapshot) {
+            if(childSnapshot.val()["End_date"]>=(new Date().getTime()/1000))
+                data.push(childSnapshot.val())
         });
         res.json(data);
     });

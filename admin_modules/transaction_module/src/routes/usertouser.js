@@ -3,7 +3,7 @@ const router = express.Router();
 const Transaction = require('../../../../database/admin/transaction');
 const firebase = require("../../../../configs/firebase.config");
 const checkPromotion = require('./promotion');
-
+const {sendMessage,getRegisterToken} =require('../../../../app_modules/client_modules/src/controllers/cloudMessaging.controller')
 //const transaction = require('transaction_module');
 router.post("/", (req, res) => {
     let tranID = "TRANS";
@@ -86,7 +86,18 @@ router.post("/", (req, res) => {
                                                 MoneyPromotion: promotionVar["moneypromotion"]
                                             }, error => {
                                                 console.log(error);
-                                            })
+                                            }).then((snap) => {
+                                                firebase.getDatabase().ref("register-token/" + uidT).orderByChild("token").once("value", snapshot => {
+                                                }, errorObject => {
+                                                  console.log("The read failed: " + errorObject.code);
+                                                }).then((snap)=>{
+                                                    sendMessage(snap.val().token,{
+                                                        money:newmoney,
+                                                        value:"Bạn đã nhận được tiền",
+                                                        type: "RECEIVE_TRANSACTION"
+                                                        });
+                                                    });      
+                                            });
                 
                                             userRefT.update({ money: newmoney }, error => {
                                                 if (error) {
