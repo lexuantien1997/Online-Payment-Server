@@ -12,12 +12,14 @@ const firebase = require("firebase-admin");
  *    value: "lalala"  
  *    type: "RECEIVE_TRANSACTION" // BLOCKED
  *  }
+ * 
  */
 const sendMessage = (registerToken, data) => {
   let message = {
     data,
     token: registerToken
   }
+
   firebase.messaging().send(message)
     .then((response) => {
       // Response is a message ID string.

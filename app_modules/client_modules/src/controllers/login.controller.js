@@ -1,6 +1,6 @@
 const loginValidate = require('../validations/login.validation');
 const loginService = require('../services/LoginService');
-const { AddOnlineUser, checkUSerOnline, AddOnlineTempUser } = require('../services/OnlineUserService');
+const { AddOnlineUser, checkUSerOnline } = require('../services/OnlineUserService');
 const {NOT_VERIFY_EMAIL, PASSWORD_NOTCORRECT, EMAIL_PHONE_NOT_EXIST} = require('../validations/errors-name');
 const passwordCrypt = require('../utils/password.crypt');
 const Checkin = require('../../../../database/admin/checkin');
@@ -46,7 +46,6 @@ const login = (_user,password,emailOrPhone,deviceInfo,type,res) => {
 
       // => user online -> add to firebase -> async function
       AddOnlineUser(uid,emailOrPhone,deviceInfo, (info,data) => callback(info,data));
-      AddOnlineTempUser(uid,phone,(info,data) => callback(info,data));
       return res.status(200).json(api);   
     } else {
       api.status = 1;
