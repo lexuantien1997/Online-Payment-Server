@@ -59,7 +59,7 @@ router.post('/update-information-user', (req,res) => {
 router.post('/send-message', (req,res) => {
   console.log("Tracking: send message to device with token: " + req.body.registerToken);
   sendMessage(req.body.registerToken , {
-    type:"BLOCKd"
+    type:"BLOCK"
   });
 });
 
