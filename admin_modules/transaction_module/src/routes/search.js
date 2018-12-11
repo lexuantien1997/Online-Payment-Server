@@ -9,8 +9,6 @@ router.get("/user/:key", (req, res) => {
     var result = {
         listUser: []
     }
-    console.log(key);
-
     var ref = firebase.getDatabase().ref("user");
 
     ref.orderByChild("phone").once("value", function (snapshot) {
@@ -32,7 +30,6 @@ router.get("/user/:key", (req, res) => {
 router.get("/loadTransaction/:phone", (req, res) => {
     var phone  = req.params.phone;
     var ref = firebase.getDatabase().ref("transaction");
-    console.log(phone);
     ref.orderByChild("Phone").equalTo(phone).once("value", function (snapshot) {
         data=[]
         snapshot.forEach(function (childSnapshot) {
