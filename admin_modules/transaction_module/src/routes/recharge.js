@@ -69,7 +69,7 @@ router.post("/", (req, res) => {
                                     Fee:promotionVar["fee"],
                                     MoneyPromotion: promotionVar["moneypromotion"]
                                 }
-                                result.status = 0;
+                                result.status = 1;
                                 result.money = money;
                                 console.log("_________________________________")
                                 console.log("New recharge transaction is created; " + JSON.stringify(result));

@@ -15,7 +15,6 @@ router.get("/listPromotion", (req, res) => {
         snapshot.forEach(function (childSnapshot) {
             data.push(childSnapshot.val());
         });
-        console.log(data);
         res.json(data);
     });
 });
