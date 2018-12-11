@@ -50,16 +50,25 @@ const checkUSerOnline = (emailOrPhone) => new Promise((resolve,reject) => {
 const blockUSer = (uid,callback) => {
   RemoveOnlineUser(uid,callback).then(() => {
     let userRef = firebase.getDatabase().ref("user/" + uid);
-    userRef.update({ type: "BLOCKED" }, error => {
+    userRef.update({ type: 1 }, error => {
       if(error) callback("BLOCK_FAIL",error)
       else callback("BLOCK_SUCCESS");
     });
   })
 }
 
+const unBlockUSer = (uid,callback) => {
+  let userRef = firebase.getDatabase().ref("user/" + uid);
+  userRef.update({ type: 0 }, error => {
+    if(error) callback("UNBLOCK_FAIL",error)
+    else callback("UNBLOCK_SUCCESS");
+  });
+}
+
 module.exports = {
   AddOnlineUser,
   RemoveOnlineUser,
   checkUSerOnline,
-  blockUSer
+  blockUSer,
+  unBlockUSer
 }
