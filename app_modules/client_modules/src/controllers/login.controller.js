@@ -23,7 +23,7 @@ const login = (_user,password,emailOrPhone,deviceInfo,type,res) => {
 
   let uid = Object.keys(_user)[0];
   console.log(password);
-  if(_user[uid].type == "BLOCKED") {
+  if(_user[uid].type == 1) { // blocked
     api.status = 1;
     api.errors.emailOrPhone = "YOU WAS BLOCKED";
     api.user = {};
