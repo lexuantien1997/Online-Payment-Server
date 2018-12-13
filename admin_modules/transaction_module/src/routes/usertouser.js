@@ -90,15 +90,16 @@ router.post("/", (req, res) => {
                                                 firebase.getDatabase().ref("register-token/" + uidT).orderByChild("token").once("value", snapshot => {
                                                 }, errorObject => {
                                                   console.log("The read failed: " + errorObject.code);
-                                                }).then((snap)=>{
-                                                    sendMessage(snap.val().token,{
-                                                        tranID:"dfdfdfdf",
-                                                        money: "123456",
-                                                        value:"Bạn đã nhận được tiền",
-                                                        description: "llllllll",
-                                                        type: "RECEIVE_TRANSACTION"
-                                                        });
-                                                    });      
+                                                }).then((snap)=>{ 
+                                                    if(snap.val() != null)
+                                                        sendMessage(snap.val().token,{
+                                                            tranID:tranID.toString(),
+                                                            money: Money.toString(),
+                                                            value:"Bạn đã nhận được tiền",
+                                                            description: Description.toString(),
+                                                            type: "RECEIVE_TRANSACTION"
+                                                            });
+                                                        });      
                                             });
                 
                                             userRefT.update({ money: newmoney }, error => {
