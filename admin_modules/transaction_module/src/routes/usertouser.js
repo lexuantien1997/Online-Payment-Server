@@ -92,10 +92,10 @@ router.post("/", (req, res) => {
                                                   console.log("The read failed: " + errorObject.code);
                                                 }).then((snap)=>{
                                                     sendMessage(snap.val().token,{
-                                                        tranID:TranID,
-                                                        money: newmoney,
+                                                        tranID:"dfdfdfdf",
+                                                        money: "123456",
                                                         value:"Bạn đã nhận được tiền",
-                                                        description: Description,
+                                                        description: "llllllll",
                                                         type: "RECEIVE_TRANSACTION"
                                                         });
                                                     });      

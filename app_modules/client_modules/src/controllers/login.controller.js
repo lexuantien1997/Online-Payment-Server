@@ -39,8 +39,8 @@ const login = (_user,password,emailOrPhone,deviceInfo,type,res) => {
     if(passwordCrypt.comparePassowrd(password,_user[uid].password)) { 
       console.log(1)
       api.status = 0;
-      let { name, phone, money, gender, memberAt, address, email, birthday, isFirstTime,avatar,typeMoney } = _user[uid];
-      api.user = {id: uid, name,phone,money, gender,memberAt,address,email,birthday,isFirstTime,avatar,typeMoney,online: true} ;  
+      let { name, phone, money, gender, memberAt, address, email, birthday, isFirstTime,avatar,typeMoney, securityPass } = _user[uid];
+      api.user = {id: uid, name,phone,money, gender,memberAt,address,email,birthday,isFirstTime,avatar,typeMoney,online: true , securityPass} ;  
       api.errors = {};
       console.log("Tracking: " + uid + " _ " + phone + " login successfully");
 
