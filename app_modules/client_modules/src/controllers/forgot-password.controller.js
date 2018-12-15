@@ -1,6 +1,6 @@
 const User = require('../../../../database/app/user');
 const forgotPassService = require('../services/ForgotPasswordService');
-const { SEND_FORGOT_PASSWORD_SUCCESS, PHONE_NOT_EXIST, PHONE_NOT_VERIFY, SEND_FORGOT_PASSWORD_AFTER_1H } = require("../cbInstance");
+const { SEND_FORGOT_PASSWORD_SUCCESS, PHONE_NOT_EXIST, PHONE_NOT_VERIFY, SEND_FORGOT_PASSWORD_AFTER_1H, USER_BLOCKED } = require("../cbInstance");
 const { EMAIL_PHONE_NOT_EXIST, PHONE_NOT_VERIFY_YET } = require('../validations/errors-name');
 const api = {
   status: 1,
@@ -31,6 +31,12 @@ const callBack = (info, data,res) => {
     {
       api.status = 1;
       api.errors.emailOrPhone = PHONE_NOT_VERIFY_YET;
+      return res.status(200).json(api); 
+    }
+    case USER_BLOCKED:
+    {
+      api.status = 1;
+      api.errors.emailOrPhone = 'Sorry!! You was BLOCKED';
       return res.status(200).json(api); 
     }
   }

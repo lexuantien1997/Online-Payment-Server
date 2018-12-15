@@ -8,7 +8,8 @@ const {
   EMAILPHONE_NOT_EXIST,
   PHONE_NOT_VERIFY,
   PHONE_NOT_EXIST,
-  SEND_FORGOT_PASSWORD_AFTER_1H
+  SEND_FORGOT_PASSWORD_AFTER_1H,
+  USER_BLOCKED
 } = require("../cbInstance");
 const passwordCrypt =  require('../utils/password.crypt');
 const Nexmo = require('nexmo');
@@ -70,15 +71,19 @@ const SendForgotPassword = (type, emailOrPhone,callback) => {
     checkPhoneVerify("+84" + emailOrPhone*1).then(data => {
       if(data != null) {
         let uid = Object.keys(data)[0];
-        if(data[uid].verified) { // 1hours
-          if( Date.now() - data[uid].nextResetPasswordSend > 3600000) {
-            console.log("send forgot pass for uid: " + uid);
-            sendForgotPasswordbyPhone(uid,"+84" + emailOrPhone*1,callback);
-          } else {
-            callback(SEND_FORGOT_PASSWORD_AFTER_1H, data[uid].nextResetPasswordSend);
-          }         
-        } else { // phone hasn't been verified yet
-          callback(PHONE_NOT_VERIFY);
+        if(data[uid].type == 1) { // blocked
+          callback(USER_BLOCKED);
+        } else { // not block
+          if(data[uid].verified) { // 1hours
+            if( Date.now() - data[uid].nextResetPasswordSend > 3600000) {
+              console.log("send forgot pass for uid: " + uid);
+              sendForgotPasswordbyPhone(uid,"+84" + emailOrPhone*1,callback);
+            } else {
+              callback(SEND_FORGOT_PASSWORD_AFTER_1H, data[uid].nextResetPasswordSend);
+            }         
+          } else { // phone hasn't been verified yet
+            callback(PHONE_NOT_VERIFY);
+          }
         }
       } else { // wrong phone number
         callback(PHONE_NOT_EXIST);
