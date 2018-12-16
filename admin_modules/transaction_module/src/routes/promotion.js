@@ -12,10 +12,14 @@ const checkPromotion = (val,money,type)  => new Promise((resolve,reject) =>  {
             }
         });
         
+        money=parseFloat(val["money"])+parseFloat(money)-parseFloat(fee);
         var orginDate = new Date().getTime() / 1000;
         firebase.getDatabase().ref("promotion").orderByChild("Start_date").endAt(orginDate)
         .once("value", snapshot => {
+            
+            let length=0;
             snapshot.forEach(function (childSnapshot) {
+                length++;
                 let valPro=childSnapshot.val();
                 if(orginDate<parseFloat(valPro["End_date"])&&type==valPro["Type_Transaction"]){
                     let birthday=parseFloat(val["birthday"]);
@@ -23,8 +27,7 @@ const checkPromotion = (val,money,type)  => new Promise((resolve,reject) =>  {
                     let age=(new Date()).getFullYear()-date.getFullYear()
                     query=valPro["Query"].replace("{age}",age);
                     query=query.split(" ");
-                    money=parseFloat(val["money"])+parseFloat(money)-parseFloat(fee);
-                    let isOk=true;
+                    let isOk=false;
                     if(query.length>3){         
                         if (query[1] == "<"){
                             isOk=eval(query[0]+"<"+query[2]);
@@ -48,6 +51,7 @@ const checkPromotion = (val,money,type)  => new Promise((resolve,reject) =>  {
                         }
                     }
                     if(isOk){
+                        console.log("1vo dayyyyyyyyyyyyyy");
                         money=parseFloat(money)+parseFloat(valPro["Discount"]);
                         resolve( {
                             is:true,
@@ -56,6 +60,7 @@ const checkPromotion = (val,money,type)  => new Promise((resolve,reject) =>  {
                             fee:fee
                         });
                     }
+                    console.log("2");
                     resolve( {
                         is:false,
                         money:money,
@@ -65,6 +70,7 @@ const checkPromotion = (val,money,type)  => new Promise((resolve,reject) =>  {
                     
                 }
                 else{
+                    console.log(money);
                     resolve( {
                         is:false,
                         money:money,
@@ -73,6 +79,16 @@ const checkPromotion = (val,money,type)  => new Promise((resolve,reject) =>  {
                     });
                 }
             });
+            if (length == 0) {
+                money = parseFloat(val["money"]) + parseFloat(money) - parseFloat(fee);
+                console.log(money);
+                resolve({
+                    is: false,
+                    money: money,
+                    moneypromotion: 0,
+                    fee: fee
+                });
+            }
         });
     });
 

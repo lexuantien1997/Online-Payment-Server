@@ -39,17 +39,6 @@ router.post("/", (req, res) => {
                             console.log(error);
 
                     }).then((snap) => {
-                        firebase.getDatabase().ref("register-token/" + uid).orderByChild("token").once("value", snapshot => {
-                        }, errorObject => {
-                            console.log("The read failed: " + errorObject.code);
-                        }).then((snap) => {
-                            sendMessage(snap.val().token, {
-                                money: newmoney,
-                                value: "Bạn đã nhận được tiền",
-                                type: "RECHARGE"
-                            });
-                        });    
-
                         let result = {
                             Name: name,
                             Phone: phone,
@@ -64,7 +53,8 @@ router.post("/", (req, res) => {
                         };
                         console.log("_________________________________")
                         console.log("New transaction is created: " + JSON.stringify(result));
-                        moneynew = promotionVar["money"];
+                        moneynew = parseFloat(promotionVar["money"]);
+                        console.log("12323",promotionVar);
                         // update money user
                         let userRef = firebase.getDatabase().ref("user/" + uid);
                         userRef.update({ money:moneynew }, error => {
