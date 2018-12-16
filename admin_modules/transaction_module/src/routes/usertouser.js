@@ -8,7 +8,6 @@ const {sendMessage,getRegisterToken} =require('../../../../app_modules/client_mo
 router.post("/", (req, res) => {
     let tranID = "TRANS";
     var { Name, Target, Money, Description, Phone,TargetName } = req.body;
-    console.log(req.body);
     let user = firebase.getDatabase().ref("user");
     user.orderByChild("phone").equalTo(Phone).once("value", data => {
         let val = data.val();
@@ -71,14 +70,17 @@ router.post("/", (req, res) => {
                                             let uidT = Object.keys(valT)[0];
                                             valT = valT[uidT];
                                             let userRefT = firebase.getDatabase().ref("user/" + uidT);
-                                            let newmoney = parseFloat(promotionVar["money"]) + parseFloat(valT["money"]);                                           
-
+                                            let newmoney=0;
+                                            if(promotionVar["is"])
+                                                newmoney = parseFloat(promotionVar["moneypromotion"]) + parseFloat(valT["money"]);                                           
+                                            else
+                                                newmoney = parseFloat(Money) + parseFloat(valT["money"]); 
                                             transaction.push({
                                                 Name: Name,
                                                 Phone: Target,
                                                 TranID: tranID,
                                                 Target: Phone,
-                                                Money: parseFloat(promotionVar["money"]),
+                                                Money: newmoney,
                                                 Description: Description,
                                                 DateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
                                                 Type: 4,
