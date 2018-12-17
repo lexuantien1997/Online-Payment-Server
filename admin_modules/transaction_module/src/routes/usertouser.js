@@ -97,12 +97,13 @@ router.post("/", (req, res) => {
                                                 newmoney = parseFloat(promotionVar["moneypromotion"]) + parseFloat(valT["money"]);                                           
                                             else
                                                 newmoney = parseFloat(Money) + parseFloat(valT["money"]); 
+                                            console.log("money123",newmoney);
                                             transaction.push({
                                                 Name: Name,
                                                 Phone: Target,
                                                 TranID: tranID,
                                                 Target: Phone,
-                                                Money:  parseFloat(newmoney),
+                                                Money:  parseFloat(Money),
                                                 Description: Description,
                                                 DateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
                                                 Type: 4,
@@ -111,7 +112,6 @@ router.post("/", (req, res) => {
                                             }, error => {
                                                 console.log(error);
                                             }).then((snap) => {
-                                              console.log(uidT);
                                                 firebase.getDatabase().ref("register-token/" + uidT).orderByChild("token").once("value", snapshot => {
                                                 }, errorObject => {
                                                   console.log("The read failed: " + errorObject.code);
