@@ -19,6 +19,7 @@ const addNotification = (uid, title, body, data, onSend) => new Promise((resolve
 })
 
 const updateNotification = (uid,key,data,onSend) => {
+  console.log("UPDATE",data);
   let notification = firebase.getDatabase().ref("notification/" + uid + "/" + key);
   notification.update({ onSend, data });
 }
@@ -121,11 +122,12 @@ router.post("/", (req, res) => {
                                                         let data = {
                                                           money: Money.toString(),
                                                           description: Description.toString(),
-                                                          type: "RECEIVE_TRANSACTION"
+                                                          type: '0' // RECEIVE_TRANSACTION
                                                         };
                                                         addNotification(uidT, Name, Description, data, true).then((key)=> {
                                                           sendNotificationAfterAuthen(snap.val().token, Name, Description, data, true).catch(()=> {
-                                                            data.type = "RECEIVE_TRANSACTION_NO_POPUP"
+                                                            data.type = '1' // RECEIVE_TRANSACTION_NO_POPUP
+                                                            console.log(data);
                                                             updateNotification(uidT,key,data,false);
                                                           })
                                                         })                                       
@@ -137,7 +139,7 @@ router.post("/", (req, res) => {
                                                           //name
                                                           money: Money.toString(),
                                                           description: Description.toString(),
-                                                          type: "RECEIVE_TRANSACTION_NO_POPUP"
+                                                          type: '1' // RECEIVE_TRANSACTION_NO_POPUP
                                                         };
                                                         addNotification(uidT, Name, Description, data,false); 
                                                       }  
