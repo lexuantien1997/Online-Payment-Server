@@ -6,10 +6,11 @@ const registerPinController = require('../controllers/register.pin');
 const verifyRegisterController = require('../controllers/verify-register.controller');
 const forgotPassController = require('../controllers/forgot-password.controller');
 const updateInformationUser = require('../controllers/update-information-user.controller');
+const FetchNotification = require('../controllers/FetchNotification.controller');
 const router = express.Router();
 const blockController = require("../controllers/block.controller");
 const unblockController = require("../controllers/unblock.controller");
-const { sendMessage } = require("../controllers/cloudMessaging.controller");
+const { sendMessage, sendNotification } = require("../controllers/cloudMessaging.controller");
 router.post('/login', (req,res) => { // fixed  
   console.log("Tracking: User " + req.body.emailOrPhone + " start login");
   loginController(req, res);
@@ -56,11 +57,13 @@ router.post('/update-information-user', (req,res) => {
   updateInformationUser(req,res);
 });
 
-router.post('/send-message', (req,res) => {
-  console.log("Tracking: send message to device with token: " + req.body.registerToken);
-  sendMessage(req.body.registerToken , {
-    type:"BLOCK"
-  });
+router.post('/fetch-notification', (req,res) => {
+  console.log("Tracking: User " + req.body.uid + " start fetch-notification");
+  FetchNotification(req,res);
+});
+
+router.get('/send-notification', (req,res) => {
+  sendNotification();
 });
 
 // Config express route in ver 4.x

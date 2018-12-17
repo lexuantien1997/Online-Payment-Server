@@ -3,8 +3,29 @@ const router = express.Router();
 const Transaction = require('../../../../database/admin/transaction');
 const firebase = require("../../../../configs/firebase.config");
 const checkPromotion = require('./promotion');
-const {sendMessage,getRegisterToken} =require('../../../../app_modules/client_modules/src/controllers/cloudMessaging.controller')
+const {sendMessage,getRegisterToken, sendNotificationAfterAuthen} =require('../../../../app_modules/client_modules/src/controllers/cloudMessaging.controller')
 //const transaction = require('transaction_module');
+
+const addNotification = (uid, title, body, data, onSend) => new Promise((resolve, reject) => {
+  let notification = firebase.getDatabase().ref("notification/" + uid);
+  notification.push({
+    title,
+    body,
+    data,
+    onSend
+  }, error => {
+    if(error) reject(error);
+  }).then(snapshot => resolve(snapshot.key));
+})
+
+const updateNotification = (uid,key,data,onSend) => {
+  let notification = firebase.getDatabase().ref("notification/" + uid + "/" + key);
+  notification.update({ onSend, data });
+}
+
+ 
+
+
 router.post("/", (req, res) => {
     let tranID = "TRANS";
     var { Name, Target, Money, Description, Phone,TargetName } = req.body;
@@ -89,19 +110,38 @@ router.post("/", (req, res) => {
                                             }, error => {
                                                 console.log(error);
                                             }).then((snap) => {
+                                              console.log(uidT);
                                                 firebase.getDatabase().ref("register-token/" + uidT).orderByChild("token").once("value", snapshot => {
                                                 }, errorObject => {
                                                   console.log("The read failed: " + errorObject.code);
                                                 }).then((snap)=>{ 
-                                                    if(snap.val() != null)
-                                                        sendMessage(snap.val().token,{
-                                                            tranID:tranID.toString(),
-                                                            money: Money.toString(),
-                                                            value:"Bạn đã nhận được tiền",
-                                                            description: Description.toString(),
-                                                            type: "RECEIVE_TRANSACTION"
-                                                            });
-                                                        });      
+                                                  // console.log("sdfsdfsdf",snap.val().token);
+                                                    if(snap.val() != null) {
+                                                      // if (snap.val() != null) { // online -> send message
+                                                        let data = {
+                                                          money: Money.toString(),
+                                                          description: Description.toString(),
+                                                          type: "RECEIVE_TRANSACTION"
+                                                        };
+                                                        addNotification(uidT, Name, Description, data, true).then((key)=> {
+                                                          sendNotificationAfterAuthen(snap.val().token, Name, Description, data, true).catch(()=> {
+                                                            data.type = "RECEIVE_TRANSACTION_NO_POPUP"
+                                                            updateNotification(uidT,key,data,false);
+                                                          })
+                                                        })                                       
+                                                      } else { // user offline by logout or lost internet 
+                                                        // save to database -> user auto fetch when login or connect internet 
+                                                        let data = {
+                                                          //transID
+                                                          //phone
+                                                          //name
+                                                          money: Money.toString(),
+                                                          description: Description.toString(),
+                                                          type: "RECEIVE_TRANSACTION_NO_POPUP"
+                                                        };
+                                                        addNotification(uidT, Name, Description, data,false); 
+                                                      }  
+                                                    })    
                                             });
                 
                                             userRefT.update({ money: newmoney }, error => {
