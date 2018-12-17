@@ -33,6 +33,12 @@ const callBack = (info, data,res) => {
       api.errors.emailOrPhone = PHONE_NOT_VERIFY_YET;
       return res.status(200).json(api); 
     }
+	case 'EMAIL_DEVELOP':
+    {
+      api.status = 1;
+      api.errors.emailOrPhone = 'Sorry!! Email is DEVELOPING';
+      return res.status(200).json(api); 
+    }
     case USER_BLOCKED:
     {
       api.status = 1;

@@ -90,7 +90,7 @@ const SendForgotPassword = (type, emailOrPhone,callback) => {
       }
     });
   } else {
-
+	callback('EMAIL_DEVELOP');
   }
 }
 
