@@ -28,7 +28,7 @@ router.post("/", (req, res) => {
                         Phone: phone,
                         TranID: tranID,
                         Target: phone,
-                        Money:  (parseFloat(promotionVar["moneypromotion"])+parseFloat(money)),
+                        Money:  parseFloat(money)+(parseFloat(promotionVar["moneypromotion"])-parseFloat(promotionVar["fee"])),
                         Description: "nothing",
                         DateTrans: (new Date()).toLocaleDateString()+" "+(new Date()).toLocaleTimeString(),
                         Type: 3,
@@ -70,7 +70,7 @@ router.post("/", (req, res) => {
                                     MoneyPromotion: promotionVar["moneypromotion"]
                                 }
                                 result.status = 1;
-                                result.money = (parseFloat(promotionVar["moneypromotion"])+parseFloat(money));
+                                result.money = parseFloat(money)+(parseFloat(promotionVar["moneypromotion"])-parseFloat(promotionVar["fee"]));
                                 console.log("_________________________________")
                                 console.log("New recharge transaction is created; " + JSON.stringify(result));
                                 res.status(200).json(result);

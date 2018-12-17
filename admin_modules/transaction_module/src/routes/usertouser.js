@@ -120,6 +120,8 @@ router.post("/", (req, res) => {
                                                     if(snap.val() != null) {
                                                       // if (snap.val() != null) { // online -> send message
                                                         let data = {
+                                                            name:TargetName,
+                                                            dateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
                                                           money: Money.toString(),
                                                           description: Description.toString(),
                                                           type: '0' // RECEIVE_TRANSACTION
@@ -177,7 +179,7 @@ router.post("/", (req, res) => {
                                                 TranID: "00000"
                                             }
                                             console.log("ERROR: " + JSON.stringify(result));
-                                            res.status(403).json(result);
+                                            res.status(200).json(result);
                                         }
                                     });
                                 }
@@ -194,7 +196,7 @@ router.post("/", (req, res) => {
                     TranID: "00000"
                 }
                 console.log("ERROR: " + JSON.stringify(result));
-                res.status(403).json(result);
+                res.status(200).json(result);
             }
         }
         else {
@@ -205,7 +207,7 @@ router.post("/", (req, res) => {
                 TranID: "00000"
             }
             console.log("ERROR: " + JSON.stringify(result));
-            res.status(403).json(result);
+            res.status(200).json(result);
         }
     });
 

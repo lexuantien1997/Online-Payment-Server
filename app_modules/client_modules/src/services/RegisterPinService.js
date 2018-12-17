@@ -12,7 +12,7 @@ const updateUserData = (securityPass,  uid, callback) => {
 
 
 const updatePinUser = (id,securityPass,callback) => {
-  securityPass = hashPassword(securityPass);
+ // securityPass = hashPassword(securityPass);
   updateUserData(securityPass,id, callback);
 }
 
