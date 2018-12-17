@@ -28,7 +28,7 @@ router.post("/", (req, res) => {
                         Phone: phone,
                         TranID: tranID,
                         Target: phone,
-                        Money: money,
+                        Money:  parseFloat(money),
                         Description: "nothing",
                         DateTrans: (new Date()).toLocaleDateString()+" "+(new Date()).toLocaleTimeString(),
                         Type: 3,
@@ -54,7 +54,6 @@ router.post("/", (req, res) => {
                         console.log("_________________________________")
                         console.log("New transaction is created: " + JSON.stringify(result));
                         moneynew = parseFloat(promotionVar["money"]);
-                        console.log("12323",promotionVar);
                         // update money user
                         let userRef = firebase.getDatabase().ref("user/" + uid);
                         userRef.update({ money:moneynew }, error => {
