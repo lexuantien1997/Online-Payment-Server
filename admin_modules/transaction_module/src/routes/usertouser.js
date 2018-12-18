@@ -19,6 +19,7 @@ const addNotification = (uid, title, body, data, onSend) => new Promise((resolve
 })
 
 const updateNotification = (uid,key,data,onSend) => {
+  console.log("UPDATE",data);
   let notification = firebase.getDatabase().ref("notification/" + uid + "/" + key);
   notification.update({ onSend, data });
 }
@@ -52,7 +53,7 @@ router.post("/", (req, res) => {
                             Phone: Phone,
                             TranID: tranID,
                             Target: Target,
-                            Money: Money,
+                            Money:  parseFloat(Money),
                             Description: Description,
                             DateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
                             Type: 1,
@@ -96,12 +97,13 @@ router.post("/", (req, res) => {
                                                 newmoney = parseFloat(promotionVar["moneypromotion"]) + parseFloat(valT["money"]);                                           
                                             else
                                                 newmoney = parseFloat(Money) + parseFloat(valT["money"]); 
+                                            console.log("money123",newmoney);
                                             transaction.push({
                                                 Name: Name,
                                                 Phone: Target,
                                                 TranID: tranID,
                                                 Target: Phone,
-                                                Money: newmoney,
+                                                Money:  parseFloat(Money),
                                                 Description: Description,
                                                 DateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
                                                 Type: 4,
@@ -110,22 +112,23 @@ router.post("/", (req, res) => {
                                             }, error => {
                                                 console.log(error);
                                             }).then((snap) => {
-                                              console.log(uidT);
                                                 firebase.getDatabase().ref("register-token/" + uidT).orderByChild("token").once("value", snapshot => {
                                                 }, errorObject => {
                                                   console.log("The read failed: " + errorObject.code);
                                                 }).then((snap)=>{ 
                                                   // console.log("sdfsdfsdf",snap.val().token);
                                                     if(snap.val() != null) {
-                                                      // if (snap.val() != null) { // online -> send message
                                                         let data = {
+                                                          name:Name,
+                                                          dateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
                                                           money: Money.toString(),
                                                           description: Description.toString(),
-                                                          type: "RECEIVE_TRANSACTION"
+                                                          type: '0' // RECEIVE_TRANSACTION
                                                         };
                                                         addNotification(uidT, Name, Description, data, true).then((key)=> {
                                                           sendNotificationAfterAuthen(snap.val().token, Name, Description, data, true).catch(()=> {
-                                                            data.type = "RECEIVE_TRANSACTION_NO_POPUP"
+                                                            data.type = '1' // RECEIVE_TRANSACTION_NO_POPUP
+                                                            console.log(data);
                                                             updateNotification(uidT,key,data,false);
                                                           })
                                                         })                                       
@@ -135,9 +138,11 @@ router.post("/", (req, res) => {
                                                           //transID
                                                           //phone
                                                           //name
+                                                          name:TargetName,
+                                                          dateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
                                                           money: Money.toString(),
                                                           description: Description.toString(),
-                                                          type: "RECEIVE_TRANSACTION_NO_POPUP"
+                                                          type: '1' // RECEIVE_TRANSACTION_NO_POPUP
                                                         };
                                                         addNotification(uidT, Name, Description, data,false); 
                                                       }  
@@ -175,7 +180,7 @@ router.post("/", (req, res) => {
                                                 TranID: "00000"
                                             }
                                             console.log("ERROR: " + JSON.stringify(result));
-                                            res.status(403).json(result);
+                                            res.status(200).json(result);
                                         }
                                     });
                                 }
@@ -192,7 +197,7 @@ router.post("/", (req, res) => {
                     TranID: "00000"
                 }
                 console.log("ERROR: " + JSON.stringify(result));
-                res.status(403).json(result);
+                res.status(200).json(result);
             }
         }
         else {
@@ -203,7 +208,7 @@ router.post("/", (req, res) => {
                 TranID: "00000"
             }
             console.log("ERROR: " + JSON.stringify(result));
-            res.status(403).json(result);
+            res.status(200).json(result);
         }
     });
 

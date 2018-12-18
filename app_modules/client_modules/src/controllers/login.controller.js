@@ -49,9 +49,9 @@ const login = (_user,password,emailOrPhone,deviceInfo,type,res) => {
       return res.status(200).json(api);   
     } else {
       api.status = 1;
-      api.errors.password = PASSWORD_NOTCORRECT;
+      api.errors.emailOrPhone = "email|phone or password wrong";
       api.user = {};
-      console.log("Tracking: " + uid + " _ " + phone + " login fail BECAUSE wrong password");
+      //console.log("Tracking: " + uid + " _ " + phone + " login fail BECAUSE wrong password");
       return res.status(200).json(api);   
     }
   }

@@ -53,6 +53,7 @@ const checkPromotion = (val,money,type)  => new Promise((resolve,reject) =>  {
                     if(isOk){
                         console.log("1vo dayyyyyyyyyyyyyy");
                         money=parseFloat(money)+parseFloat(valPro["Discount"]);
+                        console.log("123333333333333333",money);
                         resolve( {
                             is:true,
                             money:money,
@@ -60,7 +61,7 @@ const checkPromotion = (val,money,type)  => new Promise((resolve,reject) =>  {
                             fee:fee
                         });
                     }
-                    console.log("2");
+                    console.log("2vo dayyyyyyyyyyyyyy");
                     resolve( {
                         is:false,
                         money:money,

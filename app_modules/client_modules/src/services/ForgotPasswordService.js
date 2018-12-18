@@ -50,7 +50,8 @@ const sendForgotPasswordbyPhone = (uid,phone,callback) => {
     else {
       console.log(response);
       if(response.messages[0].status == 0) {
-        let newPassword = passwordCrypt.hashPassword(pass);        
+        let newPassword = passwordCrypt.hashPassword(pass);   
+        console.log(newPassword);     
         updateUserData(newPassword,uid,callback);
       }
     }
@@ -90,7 +91,7 @@ const SendForgotPassword = (type, emailOrPhone,callback) => {
       }
     });
   } else {
-
+	callback('EMAIL_DEVELOP');
   }
 }
 

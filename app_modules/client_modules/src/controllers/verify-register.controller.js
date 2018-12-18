@@ -18,7 +18,7 @@ function callback(info, data,res) {
 const verifyCodeController = (req,res) => { 
   let { phone } = req.body;
   // +84: for country VN
-  registerService.beforeSendToken( "+84" + phone, (info,data) => callback(info, data, res));
+  registerService.beforeSendToken( "+84" + phone*1, (info,data) => callback(info, data, res));
 }
 
 module.exports =  { 

@@ -40,9 +40,11 @@ const sendNotificationAfterAuthen = (registerToken,title,body,data) => new Promi
       }, 
       data
   }).then((response) => {
-    // Response is a message ID string.
-    console.log('Successfully sent message:', response);
-    resolve();
+    if(response) { 
+      console.log('Successfully sent message:', response);
+      resolve(); 
+    }
+    else reject();
   })
   .catch((error) => {
     console.log('Error sending message:', error);
