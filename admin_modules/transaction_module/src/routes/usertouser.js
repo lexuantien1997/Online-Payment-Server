@@ -118,9 +118,8 @@ router.post("/", (req, res) => {
                                                 }).then((snap)=>{ 
                                                   // console.log("sdfsdfsdf",snap.val().token);
                                                     if(snap.val() != null) {
-                                                      // if (snap.val() != null) { // online -> send message
                                                         let data = {
-                                                          name:TargetName,
+                                                          name:Name,
                                                           dateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
                                                           money: Money.toString(),
                                                           description: Description.toString(),
