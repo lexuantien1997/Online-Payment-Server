@@ -9,11 +9,12 @@ const api = {
 
 const callBack = (info, data,res) => {
   console.log('info: '+ info +' - data: ' + JSON.stringify(data));
+  console.log((new Date(data)).toLocaleTimeString() + " " + (new Date(data)).toLocaleDateString());
   switch (info) {
     case SEND_FORGOT_PASSWORD_AFTER_1H: 
     {
       api.status = 1;
-      api.errors.emailOrPhone = "You can send forgot password by phone after " + data;
+      api.errors.emailOrPhone = "You can send forgot password by phone after " + (new Date(data)).toLocaleTimeString() + " " + (new Date(data)).toLocaleDateString();
       return res.status(200).json(api); 
     }
     case SEND_FORGOT_PASSWORD_SUCCESS:
