@@ -48,7 +48,7 @@ module.exports =  (req,res) => {
   // status: 0 -> success
   // status: 1 -> found error
 	let errors;
-  req.body.phone = "+84" + req.body.phone;
+  req.body.phone = "+84" + req.body.phone*1;
   console.log(req.body);
 	// Check user name / phone is used or not by access database
   registerService.registerUser(req.body, (info, data) => callback(info,data,res));

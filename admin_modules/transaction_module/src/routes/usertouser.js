@@ -120,8 +120,8 @@ router.post("/", (req, res) => {
                                                     if(snap.val() != null) {
                                                       // if (snap.val() != null) { // online -> send message
                                                         let data = {
-                                                            name:TargetName,
-                                                            dateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
+                                                          name:TargetName,
+                                                          dateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
                                                           money: Money.toString(),
                                                           description: Description.toString(),
                                                           type: '0' // RECEIVE_TRANSACTION
@@ -139,6 +139,8 @@ router.post("/", (req, res) => {
                                                           //transID
                                                           //phone
                                                           //name
+                                                          name:TargetName,
+                                                          dateTrans: (new Date()).toLocaleDateString() + " " + (new Date()).toLocaleTimeString(),
                                                           money: Money.toString(),
                                                           description: Description.toString(),
                                                           type: '1' // RECEIVE_TRANSACTION_NO_POPUP
